@@ -20,6 +20,8 @@ frontend/
 ├── .gitignore             Git の除外設定
 ├── .claude/
 │   └── settings.json      Claude Code の設定（秘密情報を読ませない）
+├── .codex/
+│   └── config.toml        Codex の設定（秘密情報を読ませない）
 └── docs/
     ├── STRUCTURE.md       このファイル（コードマップ）
     ├── ARCHITECTURE.md    設計のルール
@@ -36,6 +38,7 @@ frontend/
 |---|---|
 | `/` | 設定ファイルとドキュメントの入口 |
 | `.claude/` | Claude Code の設定 |
+| `.codex/` | Codex の設定 |
 | `docs/` | 開発用ドキュメント |
 | `docs/decisions/` | 決めたことと理由の記録（ADR）。1件1ファイル |
 
@@ -55,7 +58,8 @@ frontend/
 | `AGENTS.md` | AI エージェント向けの作業ガイド。ルールと、どの docs をいつ読むかの本体 | `docs/` 以下すべて |
 | `README.md` | リポジトリの概要 | |
 | `.gitignore` | Git の除外設定（Xcode、SwiftPM、CocoaPods、Carthage、fastlane、ローカルの AI 設定） | |
-| `.claude/settings.json` | Claude Code の設定。秘密情報のファイルを読ませない deny ルールと sandbox | |
+| `.claude/settings.json` | Claude Code の設定。秘密情報のファイルを読ませない deny ルールと sandbox | `.codex/config.toml` |
+| `.codex/config.toml` | Codex の設定。sandbox の中のコマンドから秘密情報のファイルを読ませない permission profile | `.claude/settings.json` |
 | `docs/STRUCTURE.md` | このファイル。構成と役割のコードマップ | `AGENTS.md`、`docs/ARCHITECTURE.md` |
 | `docs/ARCHITECTURE.md` | 設計のルール。層の分け方、依存の向き、データの流れ | `docs/decisions/` |
 | `docs/GLOSSARY.md` | IMANO の用語と、コード上の名前の対応表 | `docs/API.md` |

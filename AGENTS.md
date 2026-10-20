@@ -53,4 +53,5 @@ AIコーディングエージェント（Claude Code、Codex など）向けの�
 
 - 変更は小さく、目的ごとに分ける
 - 秘密情報（APIキー、証明書など）をコミットしない
+- 秘密情報のファイル（`.env`、`*.xcconfig`、`GoogleService-Info.plist`、`*.p8`、`*.p12`、`*.mobileprovision`）は開かない。読む対象は `.claude/settings.json` と `.codex/config.toml` で制限している
 - 迷ったら勝手に決めず、確認する
