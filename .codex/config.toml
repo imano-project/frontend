@@ -9,7 +9,12 @@ glob_scan_max_depth = 6
 
 [permissions.imano.filesystem.":workspace_roots"]
 "**/.env" = "deny"
-"**/.env.*" = "deny"
+"**/.env.local" = "deny"
+"**/.env.*.local" = "deny"
+"**/.env.development" = "deny"
+"**/.env.production" = "deny"
+"**/.env.staging" = "deny"
+"**/.env.test" = "deny"
 "**/*.xcconfig" = "deny"
 "**/GoogleService-Info.plist" = "deny"
 "**/*.p8" = "deny"

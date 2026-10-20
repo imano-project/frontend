@@ -64,3 +64,11 @@ fastlane/test_output
 # AI
 .ai/
 CLAUDE.md
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.p8
+*.p12
+*.mobileprovision
