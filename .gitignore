@@ -65,6 +65,10 @@ fastlane/test_output
 .ai/
 CLAUDE.md
 
+# Personal
+personal/
+.claude/settings.local.json
+
 # Secrets
 .env
 .env.*

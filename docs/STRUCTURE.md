@@ -9,7 +9,7 @@ AI エージェントは作業の前にこのファイルを読み、どこを�
 >
 > **担当範囲**: ここには「何がどこにあるか」だけを書く。「どう作るか」のルールは [ARCHITECTURE.md](ARCHITECTURE.md) に書く。
 
-最終更新: 2026-10-20
+最終更新: 2026-10-23
 
 ## ディレクトリ構成
 
@@ -57,7 +57,7 @@ frontend/
 |---|---|---|
 | `AGENTS.md` | AI エージェント向けの作業ガイド。ルールと、どの docs をいつ読むかの本体 | `docs/` 以下すべて |
 | `README.md` | リポジトリの概要 | |
-| `.gitignore` | Git の除外設定（Xcode、SwiftPM、CocoaPods、Carthage、fastlane、ローカルの AI 設定、秘密情報のファイル） | `.claude/settings.json`、`.codex/config.toml` |
+| `.gitignore` | Git の除外設定（Xcode、SwiftPM、CocoaPods、Carthage、fastlane、ローカルの AI 設定、個人用のフォルダ `personal/`、秘密情報のファイル） | `.claude/settings.json`、`.codex/config.toml` |
 | `.claude/settings.json` | Claude Code の設定。秘密情報のファイルを読ませない deny ルールと sandbox | `.codex/config.toml` |
 | `.codex/config.toml` | Codex の設定。sandbox の中のコマンドから秘密情報のファイルを読ませない permission profile | `.claude/settings.json` |
 | `docs/STRUCTURE.md` | このファイル。構成と役割のコードマップ | `AGENTS.md`、`docs/ARCHITECTURE.md` |
