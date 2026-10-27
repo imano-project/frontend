@@ -110,27 +110,42 @@ Viewは、可読性・再利用性・責務の独立性を考慮して分割す�
 - 例：`HomeView`、`WeatherSectionView`、`ScheduleSectionView`
 ## 状態管理の基本方針
 
-### 基本方針
-MVVMを採用し、View・ViewModel・Modelの責務を分離する。状態管理にはSwiftUI標準の機能を使用し、チーム内で実装方法を統一する。
+### View の責務
+- UI の描画を担当する
+- ユーザー入力の受け取りを担当する
+- 子 View へのデータ渡しを担当する
+- 一時的な表示状態の制御を担当する
+- ビジネスロジックやデータ取得処理は持たない
 
-### 1. Viewの状態管理
-- View内だけで使用する一時的な状態には `@State` を使用する。
-- 親Viewが所有する状態を子Viewから読み書きする場合は `@Binding` を使用する。
-- 画面のデータや処理に関する状態は、原則としてViewModelで管理する。
+### ViewModel の責務
+- 画面の状態を管理する
+- API 通信を呼び出す
+- データの変換処理を行う
+- ローディング状態やエラー状態を管理する
+- 表示用のデータを保持する
 
-### 2. ViewModelの実装
-- ViewModelは `ObservableObject` に準拠したクラスとして実装する。
-- Viewに反映する必要があるプロパティには `@Published` を使用する。
-- ViewModelの命名は `〇〇ViewModel` とする。
-- ViewModelには画面に関係する状態や処理を記述し、Viewのレイアウトに関するコードは記述しない。
+### 状態の分け方
+- View の状態
+  - `@State` を使用する
+  - 一時的な表示制御
+  - 入力中状態
+  - アニメーション状態
+  - メニュー開閉などの UI 独自状態
+- ViewModel の状態
+  - `@Published` を使用する
+  - 画面に表示するデータ
+  - ローディング状態
+  - エラー状態
+  - 選択中データ
+  - 取得した API 結果
 
-### 3. ViewとViewModelの連携
-- ViewModelをViewが所有する場合は `@StateObject` を使用する。
-- 親Viewなどから渡された既存のViewModelを参照する場合は `@ObservedObject` を使用する。
-- ViewModelの状態をViewから変更する必要がある場合は、適切なプロパティやメソッドを通じて変更する。
-- 同じViewModelを複数のViewで使用する場合は、所有者を明確にする。
+### View から ViewModel への連携
+- ViewModel を View が所有する場合は `@StateObject` を使用する
+- 親 View から渡された ViewModel は `@ObservedObject` を使用する
+- 親 View の状態を子 View で変更する必要がある場合は `@Binding` を使用する
+- View は状態の変化を直接管理せず、ViewModel に依頼する
 
-### 4. 状態管理の注意点
+### 状態管理の注意点
 - 同じ情報を複数の場所で重複して管理しない。
 - 非同期処理では、必要に応じて読み込み中・成功・失敗の状態を管理する。
 - ViewModelからAPI通信やデータ保存などを行う場合は、必要に応じてServiceなどに処理を分離する。
