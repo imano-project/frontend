@@ -39,21 +39,21 @@ IMANO/
 
 ## 命名ルール（Naming Convention）
 
-ファイル名は、単語をアンダースコア（`_`）で区切る `snake_case` を採用する。
+ファイル名は、型名または機能名を表す `PascalCase` を採用する。
 
 ### ファイル名
 
-- すべて小文字を使用する
-- 複数の単語は `_` で区切る
-- ファイル名から役割が分かるようにする
+- 先頭は大文字
+- 単語の区切りは大文字で表現する
+- `snake_case` は使用しない
+- 1 つのファイルには 1 つの主要型を置く
 
 例：
 ```text
-logo_dog.png
-home_view.swift
-home_view_model.swift
-weather_service.swift
-schedule_response.swift
+HomeView.swift
+HomeViewModel.swift
+WeatherService.swift
+ScheduleResponse.swift
 ```
 
 ### 変数名・関数名
@@ -79,6 +79,9 @@ struct HomeView { }
 class HomeViewModel { }
 enum ScheduleType { }
 ```
+
+### 定数
+定数は `lowerCamelCase` を基本とし、アプリ全体の設定値のみ `static let` を使って管理する。
 ## SwiftUI Viewの分割方針
 
 ### 基本方針
