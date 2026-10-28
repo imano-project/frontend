@@ -10,6 +10,6 @@ import SwiftUI
 struct SettingView: View {
     // MARK: - body
     var body: some View {
-        Text("setting")
+        Text("SettingView")
     }
 }

@@ -22,10 +22,10 @@ struct IMANOApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    // MARK: - body
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
         }
         .modelContainer(sharedModelContainer)
     }
