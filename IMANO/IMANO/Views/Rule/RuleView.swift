@@ -5,4 +5,11 @@
 //  Created by 川岸遥奈 on 2026/10/28.
 //
 
-import Foundation
+import SwiftUI
+
+struct RuleView: View {
+    // MARK: - body
+    var body: some View {
+        Text("RuleView")
+    }
+}

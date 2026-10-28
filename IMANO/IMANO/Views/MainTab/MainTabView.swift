@@ -12,15 +12,15 @@ struct MainTabView : View {
     @State private var selectedTab: TabItem = .home
     // MARK: - body
     var body: some View {
-        TabView(selection: $selectedTab){
+        TabView(selection: $selectedTab) {
             HomeView()
-                .tabItem{
+                .tabItem {
                     Label(TabItem.home.title, image:TabItem.home.IconName)
                 }
                 .tag(TabItem.home)
             RuleView()
                 .tabItem {
-                    Label(TabItem.rule.title, iamge:TabItem.rule.IconName)
+                    Label(TabItem.rule.title, image:TabItem.rule.IconName)
                 }
                 .tag(TabItem.rule)
             SettingView()
