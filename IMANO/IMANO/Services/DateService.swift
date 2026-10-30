@@ -6,3 +6,31 @@
 //
 
 import Foundation
+
+struct DateService {
+
+    // MARK: - Current Date
+    func currentDate() -> Date {
+        Date()
+    }
+
+    // MARK: - Date Formatting
+    func formattedDate(from date: Date) -> String {
+        date.formatted(
+            .dateTime
+                .year()
+                .month()
+                .day()
+                .weekday(.wide)
+                .locale(Locale(identifier: "ja_JP"))
+        )
+    }
+    func formattedTime(from date: Date) -> String {
+        date.formatted(
+            .dateTime
+                .hour()
+                .minute()
+                .locale(Locale(identifier: "ja_JP"))
+        )
+    }
+}
