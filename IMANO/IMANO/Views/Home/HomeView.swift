@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct HomeView: View {
+
+    // MARK: - Properties
+    @StateObject private var dateViewModel = DateViewModel()
+
     // MARK: - body
     var body: some View {
-        Text("HomeView")
+        VStack {
+            Text(dateViewModel.dateText)
+            Text(dateViewModel.timeText)
+        }
     }
 }
