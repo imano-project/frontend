@@ -33,6 +33,7 @@ private extension DateViewModel {
     }
     func startTimer() {
         timer = Timer.publish(every: 60, on: .main, in: .common)
+            .autoconnect()
             .sink {[weak self] _ in
                 self?.updateDate( )
             }

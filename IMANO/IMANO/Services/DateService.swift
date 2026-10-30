@@ -8,12 +8,7 @@
 import Foundation
 
 struct DateService {
-
-    // MARK: - Current Date
-    func currentDate() -> Date {
-        Date()
-    }
-
+    
     // MARK: - Date Formatting
     func formattedDate(from date: Date) -> String {
         date.formatted(
