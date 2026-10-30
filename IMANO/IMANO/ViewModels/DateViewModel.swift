@@ -31,6 +31,7 @@ private extension DateViewModel {
         dateText = dateService.formattedDate(from: currentDate)
         timeText = dateService.formattedTime(from: currentDate)
     }
+    
     func startTimer() {
         let now = Date()
         let nextMinute = Calendar.current.nextDate(

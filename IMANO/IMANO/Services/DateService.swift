@@ -8,7 +8,7 @@
 import Foundation
 
 struct DateService {
-    
+
     // MARK: - Date Formatting
     func formattedDate(from date: Date) -> String {
         date.formatted(
@@ -20,6 +20,7 @@ struct DateService {
                 .locale(Locale(identifier: "ja_JP"))
         )
     }
+    
     func formattedTime(from date: Date) -> String {
         date.formatted(
             .dateTime
