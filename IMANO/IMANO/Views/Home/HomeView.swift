@@ -14,15 +14,9 @@ struct HomeView: View {
 
     // MARK: - body
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 60)) { content in
-            VStack {
-                Text(dateViewModel.dateText)
-                Text(dateViewModel.timeText)
-            }
-            .onAppear {
-                dateViewModel.updateDate(context.date)
-            }
+        VStack {
+            Text(dateViewModel.dateText)
+            Text(dateViewModel.timeText)
         }
-        Text("HomeView")
     }
 }
