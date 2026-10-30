@@ -14,10 +14,27 @@ final class DateViewModel: ObservableObject {
     @Published private(set) var dateText = ""
     @Published private(set) var timeText = ""
 
+    private var timer: AnyCancellable?
     private let dateService = DateService()
 
-    func updateDate(_ date: Date) {
-        dateText = dateService.formattedDate(from: date)
-        timeText = dateService.formattedTime(from: date)
+    // MARK: - Initializer
+    init() {
+        updateDate()
+        startTimer()
+    }
+}
+
+// MARK: - Private Method
+private extension DateViewModel {
+    func updateDate() {
+        let currentDate = Date()
+        dateText = dateService.formattedDate(from: currentDate)
+        timeText = dateService.formattedTime(from: currentDate)
+    }
+    func startTimer() {
+        timer = Timer.publish(every: 60, on: .main, in: .common)
+            .sink {[weak self] _ in
+                self?.updateDate( )
+            }
     }
 }
