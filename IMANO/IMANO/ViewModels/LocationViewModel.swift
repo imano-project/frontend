@@ -15,26 +15,32 @@ final class LocationViewModel: ObservableObject {
     @Published private(set) var locationInfo: LocationInfo?
     @Published private(set) var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published private(set) var errorMessage: String?
+    @Published private(set) var movementState: MovementState = .unknown
 
     private var previousLocation: CLLocation?
-
     private let locationService = LocationService()
+    private let motionService = MotionService()
     private let movementThreshold: CLLocationDistance = 100
 
     // MARK: - Initializer
     init() {
         setupLocationService()
+        setupMotionService()
     }
 }
 
+// MARK: - Public Methods
 extension LocationViewModel {
     func requestLocationPermission() {
         locationService.requestPermission()
     }
-    func startLocationUpdates() {
-        locationService.startUpdatingLocation()
+
+    func startMonitoring() {
+        motionService.startMonitoring()
     }
-    func stopLocationUpdates() {
+
+    func stopMonitoring() {
+        motionService.stopMonitoring()
         locationService.stopUpdatingLocation()
     }
 }
@@ -53,6 +59,20 @@ private extension LocationViewModel {
         locationService.onLocationError = { [weak self] error in
             DispatchQueue.main.async {
                 self?.errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    func setupMotionService() {
+        motionService.onActivityUpdate = { [weak self] state in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.movementState = state
+                if state.isMoving {
+                    self.locationService.startUpdatingLocation()
+                } else {
+                    self.locationService.stopUpdatingLocation()
+                }
             }
         }
     }

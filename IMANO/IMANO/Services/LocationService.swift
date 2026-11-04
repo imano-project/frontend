@@ -29,9 +29,11 @@ extension LocationService {
     func requestPermission() {
         locationManager.requestWhenInUseAuthorization()
     }
+
     func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
+
     func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()
     }

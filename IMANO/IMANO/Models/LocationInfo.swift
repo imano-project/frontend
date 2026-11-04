@@ -13,7 +13,7 @@ struct LocationInfo {
     let latitude: Double
     let longitude: Double
     let updatedAt: Date
-
+    
     // MARK: - Initializer
     init(location: CLLocation) {
         latitude = location.coordinate.latitude

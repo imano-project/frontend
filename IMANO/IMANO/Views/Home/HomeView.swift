@@ -16,17 +16,24 @@ struct HomeView: View {
     // MARK: - body
     var body: some View {
         VStack {
+            // MARK: - Date
             Text(dateViewModel.dateText)
             Text(dateViewModel.timeText)
+
+            // MARK: - Location
             if let location = locationViewModel.locationInfo {
                 Text("緯度: \(location.latitude)")
                 Text("経度: \(location.longitude)")
             } else {
                 Text("位置情報を取得していません")
             }
-            Button("位置情報を取得") {
-                locationViewModel.requestLocationPermission()
-            }
+
+            // MARK: - Movement
+            Text("移動状態: \(String(describing: locationViewModel.movementState))")
+        }
+        .onAppear {
+            locationViewModel.requestLocationPermission()
+            locationViewModel.startMonitoring()
         }
     }
 }
