@@ -13,6 +13,8 @@ final class HomeViewModel: ObservableObject {
 
     // MARK: - Properties
     @Published private(set) var locationInfo: LocationInfo?
+    @Published private(set) var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    @Published private(set) var locationErrorMessage: String?
     @Published private(set) var movementState: MovementState = .unknown
     @Published private(set) var weatherInfo: WeatherInfo?
     @Published private(set) var isWeatherLoading = false
@@ -33,6 +35,10 @@ final class HomeViewModel: ObservableObject {
         locationViewModel.startMonitoring()
     }
 
+    func retryLocationRequest() {
+        locationViewModel.retryLocationRequest()
+    }
+
     // MARK: - Private Methods
     private func setupBindings() {
         // 位置情報の監視
@@ -47,6 +53,20 @@ final class HomeViewModel: ObservableObject {
                     longitude: location.longitude
                 )
                 self.weatherViewModel.fetchWeather(for: coordinate)
+            }
+            .store(in: &cancellables)
+        // 位置情報の権限状態を監視
+        locationViewModel.$authorizationStatus
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                self?.authorizationStatus = status
+            }
+            .store(in: &cancellables)
+        // 位置情報のエラーを監視
+        locationViewModel.$errorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                self?.locationErrorMessage = message
             }
             .store(in: &cancellables)
         // 移動状態の監視

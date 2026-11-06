@@ -14,7 +14,7 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
-
+    
     // MARK: - body
     var body: some View {
         VStack {
@@ -29,19 +29,19 @@ struct HomeView: View {
             } else if homeViewModel.authorizationStatus == .denied ||
                         homeViewModel.authorizationStatus == .restricted {
                 Text("位置情報へのアクセスが許可されていません。設定から位置情報を許可してください。")
-            } else if let errorMessage = locationViewModel.errorMessage {
+            } else if let errorMessage = homeViewModel.locationErrorMessage {
                 Text("位置情報を取得できませんでした: \(errorMessage)")
                 Button("位置情報を再取得") {
-                    locationViewModel.retryLocationRequest()
+                    homeViewModel.retryLocationRequest()
                 }
-            } else if locationViewModel.authorizationStatus == .notDetermined {
+            } else if homeViewModel.authorizationStatus == .notDetermined {
                 Text("位置情報の利用許可を確認しています")
             } else {
                 Text("位置情報を取得しています")
             }
             // MARK: - Movement
             Text("移動状態: \(String(describing: homeViewModel.movementState))")
-
+            
             // MARK: - Weather
             if homeViewModel.isWeatherLoading {
                 Text("天気を取得中...")
