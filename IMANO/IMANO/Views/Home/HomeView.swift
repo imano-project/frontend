@@ -8,8 +8,20 @@
 import SwiftUI
 
 struct HomeView: View {
+
+    // MARK: - Properties
+    @Environment(\.scenePhase) private var scenePhase
+    @StateObject private var dateViewModel = DateViewModel()
+
     // MARK: - body
     var body: some View {
-        Text("HomeView")
+        VStack {
+            Text(dateViewModel.dateText)
+            Text(dateViewModel.timeText)
+        }
+        .onChange(of: scenePhase) { newPhase in
+            guard newPhase == .active else { return }
+            dateViewModel.refresh()
+        }
     }
 }
