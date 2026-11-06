@@ -8,13 +8,13 @@
 import CoreLocation
 
 final class LocationService: NSObject {
-
+    
     // MARK: - Properties
     var onLocationUpdate: ((CLLocation) -> Void)?
     var onAuthorizationChange: ((CLAuthorizationStatus) -> Void)?
     var onLocationError: ((Error) -> Void)?
     private let locationManager = CLLocationManager()
-
+    
     // MARK: - Initializer
     override init() {
         super.init()
@@ -28,15 +28,15 @@ extension LocationService {
     func requestPermission() {
         locationManager.requestWhenInUseAuthorization()
     }
-
+    
     func requestLocation() {
         locationManager.requestLocation()
     }
-
+    
     func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
-
+    
     func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()
     }
@@ -48,7 +48,7 @@ extension LocationService: CLLocationManagerDelegate {
     ) {
         onAuthorizationChange?(manager.authorizationStatus)
     }
-
+    
     func locationManager(
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
@@ -56,7 +56,7 @@ extension LocationService: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         onLocationUpdate?(location)
     }
-
+    
     func locationManager(
         _ manager: CLLocationManager,
         didFailWithError error: Error

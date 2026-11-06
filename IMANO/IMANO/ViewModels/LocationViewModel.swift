@@ -45,6 +45,18 @@ extension LocationViewModel {
         motionService.stopMonitoring()
         locationService.stopUpdatingLocation()
     }
+
+    func retryLocationRequest() {
+        let isAuthorized = authorizationStatus == .authorizedWhenInUse ||
+        authorizationStatus == .authorizedAlways
+        guard isAuthorized else {
+            locationService.requestPermission()
+            return
+        }
+        errorMessage = nil
+        hasRequestedInitialLocation = true
+        locationService.requestLocation()
+    }
 }
 
 // MARK: - Private Methods
@@ -75,6 +87,7 @@ private extension LocationViewModel {
                     self.locationService.startUpdatingLocation()
                     return
                 }
+                self.hasRequestedInitialLocation = false
                 self.errorMessage = error.localizedDescription
             }
         }
@@ -100,9 +113,10 @@ private extension LocationViewModel {
         guard hasReceivedInitialLocation else {
             return
         }
-        if movementState.isMoving {
+        switch movementState {
+        case .walking, .running, .cycling, .automotive, .unknown:
             locationService.startUpdatingLocation()
-        } else {
+        case .stationary:
             locationService.stopUpdatingLocation()
         }
     }
