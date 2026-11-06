@@ -44,12 +44,6 @@ extension LocationService: CLLocationManagerDelegate {
         _ manager: CLLocationManager
     ) {
         onAuthorizationChange?(manager.authorizationStatus)
-        switch manager.authorizationStatus {
-        case .authorizedWhenInUse, .authorizedAlways:
-            startUpdatingLocation()
-        default:
-            stopUpdatingLocation()
-        }
     }
 
     func locationManager(
