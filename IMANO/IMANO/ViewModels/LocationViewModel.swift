@@ -17,6 +17,8 @@ final class LocationViewModel: ObservableObject {
     @Published private(set) var errorMessage: String?
     @Published private(set) var movementState: MovementState = .unknown
 
+    private var hasRequestedInitialLocation = false
+    private var hasReceivedInitialLocation = false
     private var previousLocation: CLLocation?
     private let locationService = LocationService()
     private let motionService = MotionService()
@@ -43,6 +45,18 @@ extension LocationViewModel {
         motionService.stopMonitoring()
         locationService.stopUpdatingLocation()
     }
+
+    func retryLocationRequest() {
+        let isAuthorized = authorizationStatus == .authorizedWhenInUse ||
+        authorizationStatus == .authorizedAlways
+        guard isAuthorized else {
+            locationService.requestPermission()
+            return
+        }
+        errorMessage = nil
+        hasRequestedInitialLocation = true
+        locationService.requestLocation()
+    }
 }
 
 // MARK: - Private Methods
@@ -53,12 +67,28 @@ private extension LocationViewModel {
         }
         locationService.onAuthorizationChange = { [weak self] status in
             DispatchQueue.main.async {
-                self?.authorizationStatus = status
+                guard let self else { return }
+                self.authorizationStatus = status
+                let isAuthorized = status == .authorizedWhenInUse ||
+                status == .authorizedAlways
+                if isAuthorized && !self.hasRequestedInitialLocation {
+                    self.hasRequestedInitialLocation = true
+                    self.locationService.requestLocation()
+                }
+                self.updateLocationMonitoring()
             }
         }
         locationService.onLocationError = { [weak self] error in
             DispatchQueue.main.async {
-                self?.errorMessage = error.localizedDescription
+                guard let self else { return }
+                if let locationError = error as? CLError,
+                   locationError.code == .locationUnknown {
+                    self.errorMessage = "現在地を特定できません。位置情報を再取得しています。"
+                    self.locationService.startUpdatingLocation()
+                    return
+                }
+                self.hasRequestedInitialLocation = false
+                self.errorMessage = error.localizedDescription
             }
         }
     }
@@ -68,26 +98,44 @@ private extension LocationViewModel {
             guard let self else { return }
             DispatchQueue.main.async {
                 self.movementState = state
-                if state.isMoving {
-                    self.locationService.startUpdatingLocation()
-                } else {
-                    self.locationService.stopUpdatingLocation()
-                }
+                self.updateLocationMonitoring()
             }
+        }
+    }
+
+    func updateLocationMonitoring() {
+        let isAuthorized = authorizationStatus == .authorizedWhenInUse ||
+        authorizationStatus == .authorizedAlways
+        guard isAuthorized else {
+            locationService.stopUpdatingLocation()
+            return
+        }
+        guard hasReceivedInitialLocation else {
+            return
+        }
+        switch movementState {
+        case .walking, .running, .cycling, .automotive, .unknown:
+            locationService.startUpdatingLocation()
+        case .stationary:
+            locationService.stopUpdatingLocation()
         }
     }
 
     func handleLocationUpdate(_ location: CLLocation) {
         DispatchQueue.main.async {
+            self.hasReceivedInitialLocation = true
             guard let previousLocation = self.previousLocation else {
                 self.updateLocation(location)
+                self.updateLocationMonitoring()
                 return
             }
             let distance = location.distance(from: previousLocation)
             guard distance >= self.movementThreshold else {
+                self.updateLocationMonitoring()
                 return
             }
             self.updateLocation(location)
+            self.updateLocationMonitoring()
         }
     }
 
