@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct HomeView: View {
 
@@ -25,8 +26,15 @@ struct HomeView: View {
             if let location = locationViewModel.locationInfo {
                 Text("緯度: \(location.latitude)")
                 Text("経度: \(location.longitude)")
+            } else if locationViewModel.authorizationStatus == .denied ||
+                        locationViewModel.authorizationStatus == .restricted {
+                Text("位置情報へのアクセスが許可されていません。設定から位置情報を許可してください。")
+            } else if let errorMessage = locationViewModel.errorMessage {
+                Text("位置情報を取得できませんでした: \(errorMessage)")
+            } else if locationViewModel.authorizationStatus == .notDetermined {
+                Text("位置情報の利用許可を確認しています")
             } else {
-                Text("位置情報を取得していません")
+                Text("位置情報を取得しています")
             }
 
             // MARK: - Movement
