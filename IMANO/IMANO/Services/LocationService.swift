@@ -13,7 +13,6 @@ final class LocationService: NSObject {
     var onLocationUpdate: ((CLLocation) -> Void)?
     var onAuthorizationChange: ((CLAuthorizationStatus) -> Void)?
     var onLocationError: ((Error) -> Void)?
-
     private let locationManager = CLLocationManager()
 
     // MARK: - Initializer
@@ -28,6 +27,10 @@ final class LocationService: NSObject {
 extension LocationService {
     func requestPermission() {
         locationManager.requestWhenInUseAuthorization()
+    }
+
+    func requestLocation() {
+        locationManager.requestLocation()
     }
 
     func startUpdatingLocation() {
