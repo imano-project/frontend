@@ -9,18 +9,22 @@ import SwiftUI
 import Combine
 
 final class DateViewModel: ObservableObject {
-    
+
     // MARK: - Properties
     @Published private(set) var dateText = ""
     @Published private(set) var timeText = ""
-    
+
     private var timer: AnyCancellable?
     private let dateService = DateService()
-    
+
     // MARK: - Initializer
     init() {
         updateDate()
         startTimer()
+    }
+
+    func refresh() {
+        updateDate()
     }
 }
 
@@ -31,7 +35,7 @@ private extension DateViewModel {
         dateText = dateService.formattedDate(from: currentDate)
         timeText = dateService.formattedTime(from: currentDate)
     }
-    
+
     func startTimer() {
         let now = Date()
         let nextMinute = Calendar.current.nextDate(
