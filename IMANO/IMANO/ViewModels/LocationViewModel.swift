@@ -68,7 +68,14 @@ private extension LocationViewModel {
         }
         locationService.onLocationError = { [weak self] error in
             DispatchQueue.main.async {
-                self?.errorMessage = error.localizedDescription
+                guard let self else { return }
+                if let locationError = error as? CLError,
+                   locationError.code == .locationUnknown {
+                    self.errorMessage = "現在地を特定できません。位置情報を再取得しています。"
+                    self.locationService.startUpdatingLocation()
+                    return
+                }
+                self.errorMessage = error.localizedDescription
             }
         }
     }
@@ -90,9 +97,10 @@ private extension LocationViewModel {
             locationService.stopUpdatingLocation()
             return
         }
-        if !hasReceivedInitialLocation {
-            locationService.startUpdatingLocation()
-        } else if movementState.isMoving {
+        guard hasReceivedInitialLocation else {
+            return
+        }
+        if movementState.isMoving {
             locationService.startUpdatingLocation()
         } else {
             locationService.stopUpdatingLocation()
