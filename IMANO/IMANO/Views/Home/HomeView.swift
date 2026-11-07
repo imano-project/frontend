@@ -14,7 +14,7 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
-
+    
     // MARK: - body
     var body: some View {
         VStack {
