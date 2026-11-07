@@ -44,8 +44,5 @@ final class WeatherViewModel: ObservableObject {
             isLoading = false
             fetchTask = nil
         }
-        guard requestID == latestRequestID else { return }
-        isLoading = false
-        fetchTask = nil
     }
 }
