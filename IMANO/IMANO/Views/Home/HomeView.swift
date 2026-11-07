@@ -7,27 +7,13 @@
 
 import SwiftUI
 import CoreLocation
-import UIKit
+
 struct HomeView: View {
 
     // MARK: - Properties
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
-
-    // MARK: - Font Test
-
-    private let fontTest: Void = {
-        for family in UIFont.familyNames.sorted() {
-            if family.localizedCaseInsensitiveContains("Rounded") {
-                print("Family: \(family)")
-
-                for name in UIFont.fontNames(forFamilyName: family) {
-                    print("Font: \(name)")
-                }
-            }
-        }
-    }()
     
     // MARK: - body
     var body: some View {
