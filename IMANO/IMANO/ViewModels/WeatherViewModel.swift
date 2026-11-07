@@ -9,38 +9,39 @@ import SwiftUI
 import Combine
 import CoreLocation
 
+@MainActor
 final class WeatherViewModel: ObservableObject {
-
+    
     // MARK: - Properties
     @Published private(set) var weatherInfo: WeatherInfo?
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
-
+    
     private let weatherService = WeatherService()
-
+    private var fetchTask: Task<Void, Never>?
+    private var latestRequestID = UUID()
+    
     // MARK: - Fetch Weather
     func fetchWeather(for location: CLLocation) {
-        Task {
-            await fetchWeatherAsync(for: location)
-        }
-    }
-
-    // MARK: - Private Methods
-    private func fetchWeatherAsync(for location: CLLocation) async {
+        fetchTask?.cancel()
+        let requestID = UUID()
+        latestRequestID = requestID
         isLoading = true
         errorMessage = nil
-        defer {
-            isLoading = false
-        }
-        do {
-            let weather = try await weatherService.fetchWeather(for: location)
-            await MainActor.run {
+        fetchTask = Task {
+            do {
+                let weather = try await weatherService.fetchWeather(for: location)
+                guard !Task.isCancelled, requestID == latestRequestID else { return }
                 weatherInfo = weather
-            }
-        } catch {
-            await MainActor.run {
+            } catch is CancellationError {
+                // 新しいリクエストに置き換えられた場合は何もしない
+            } catch {
+                guard !Task.isCancelled, requestID == latestRequestID else { return }
                 errorMessage = error.localizedDescription
             }
         }
+        guard requestID == latestRequestID else { return }
+        isLoading = false
+        fetchTask = nil
     }
 }

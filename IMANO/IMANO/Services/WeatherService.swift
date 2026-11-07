@@ -19,15 +19,17 @@ final class WeatherService {
         let weather = try await service.weather(for: location)
         let current = weather.currentWeather
         let today = weather.dailyForecast.forecast.first
-        let hourly = weather.hourlyForecast.forecast.first
+        let hourly = weather.hourlyForecast.forecast.first {
+            $0.date >= Date()
+        }
 
         return WeatherInfo(
             temperature: current.temperature.value,
             condition: current.condition.description,
             symbolName: current.symbolName,
-            highTemperature: today?.highTemperature.value ?? 0,
-            lowTemperature: today?.lowTemperature.value ?? 0,
-            precipitationChance: hourly?.precipitationChance ?? 0,
+            highTemperature: today?.highTemperature.value,
+            lowTemperature: today?.lowTemperature.value,
+            precipitationChance: hourly?.precipitationChance,
             updatedAt: current.metadata.date
         )
     }

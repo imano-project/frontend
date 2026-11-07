@@ -9,19 +9,19 @@ import SwiftUI
 import CoreLocation
 
 struct HomeView: View {
-    
+
     // MARK: - Properties
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
-    
+
     // MARK: - body
     var body: some View {
         VStack {
             // MARK: - Date
             Text(dateViewModel.dateText)
             Text(dateViewModel.timeText)
-            
+
             // MARK: - Location
             if let location = homeViewModel.locationInfo {
                 Text("緯度: \(location.latitude)")
@@ -41,16 +41,22 @@ struct HomeView: View {
             }
             // MARK: - Movement
             Text("移動状態: \(String(describing: homeViewModel.movementState))")
-            
+
             // MARK: - Weather
             if homeViewModel.isWeatherLoading {
                 Text("天気を取得中...")
             } else if let weather = homeViewModel.weatherInfo {
                 Text("天気: \(weather.condition)")
                 Text("気温: \(weather.temperature)℃")
-                Text("最高気温: \(weather.highTemperature)℃")
-                Text("最低気温: \(weather.lowTemperature)℃")
-                Text("降水確率: \(Int(weather.precipitationChance * 100))%")
+                if let high = weather.highTemperature {
+                    Text("最高気温: \(high)℃")
+                }
+                if let low = weather.lowTemperature {
+                    Text("最低気温: \(low)℃")
+                }
+                if let chance = weather.precipitationChance {
+                    Text("降水確率（該当時間）: \(Int((chance * 100).rounded()))%")
+                }
             } else if let error = homeViewModel.weatherErrorMessage {
                 Text("天気取得エラー: \(error)")
             } else {
