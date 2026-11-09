@@ -11,7 +11,11 @@ import Combine
 final class DateViewModel: ObservableObject {
 
     // MARK: - Properties
-    @Published private(set) var dateText = ""
+    @Published private(set) var yearText = ""
+    @Published private(set) var monthText = ""
+    @Published private(set) var dayText = ""
+    @Published private(set) var weekdayText = ""
+
     @Published private(set) var timeText = ""
 
     private var timer: AnyCancellable?
@@ -32,7 +36,12 @@ final class DateViewModel: ObservableObject {
 private extension DateViewModel {
     func updateDate() {
         let currentDate = Date()
-        dateText = dateService.formattedDate(from: currentDate)
+        let calendar = Calendar.current
+        yearText = String(calendar.component(.year, from: currentDate))
+        monthText = String(calendar.component(.month, from: currentDate))
+        dayText = String(calendar.component(.day, from: currentDate))
+        let weekday = calendar.component(.weekday, from: currentDate)
+        weekdayText = dateService.weekdayName(for: weekday)
         timeText = dateService.formattedTime(from: currentDate)
     }
 

@@ -29,4 +29,11 @@ struct DateService {
                 .locale(Locale(identifier: "ja_JP"))
         )
     }
+    
+    // MARK: - Weekday
+    func weekdayName(for weekday: Int) -> String {
+        let weekdays = ["日", "月", "火", "水", "木", "金", "土"]
+        guard (1...7).contains(weekday) else { return "" }
+        return weekdays[weekday - 1]
+    }
 }

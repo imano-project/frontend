@@ -18,10 +18,15 @@ struct HomeView: View {
     // MARK: - body
     var body: some View {
         VStack {
-            // MARK: - Date
-            Text(dateViewModel.dateText)
-            Text(dateViewModel.timeText)
-
+            // MARK: - Header
+            HomeHeaderView(
+                yearText: dateViewModel.yearText,
+                monthText: dateViewModel.monthText,
+                dayText: dateViewModel.dayText,
+                weekdayText: dateViewModel.weekdayText
+            )
+            .padding()
+            
             // MARK: - Location
             if let location = homeViewModel.locationInfo {
                 Text("緯度: \(location.latitude)")
