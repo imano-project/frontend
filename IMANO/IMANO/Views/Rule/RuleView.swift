@@ -10,6 +10,10 @@ import SwiftUI
 struct RuleView: View {
     // MARK: - body
     var body: some View {
-        Text("RuleView")
+        VStack(spacing: 0) {
+
+            // MARK: - Fixed Header
+            RuleHeaderView()
+        }
     }
 }
