@@ -25,7 +25,7 @@ struct HomeHeaderView: View {
                 // MARK: - Current Activity
                 Text("今何してるか")
                     .font(AppFonts.body)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.text)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 
                 // MARK: - Date & Navigation Button
@@ -35,12 +35,16 @@ struct HomeHeaderView: View {
                     HStack(alignment: .bottom, spacing: 2) {
                         Text(yearText + "年")
                             .font(AppFonts.body)
+                            .foregroundStyle(.text)
                         Text(monthText + "月")
                             .font(AppFonts.body)
+                            .foregroundStyle(.text)
                         Text(dayText)
                             .font(AppFonts.buttonText)
+                            .foregroundStyle(.text)
                         Text("日（\(weekdayText)）")
                             .font(AppFonts.body)
+                            .foregroundStyle(.text)
                     }
                     .offset(y: -5)
                     Spacer()
@@ -51,7 +55,7 @@ struct HomeHeaderView: View {
                         .foregroundStyle(.white)
                         .frame(width: 36, height: 76)
                         .background(
-                            Color(red: 0.55, green: 0.91, blue: 0.76)
+                            Color(.mainButton)
                         )
                         .clipShape(
                             RoundedRectangle(cornerRadius: 6)
@@ -67,7 +71,7 @@ struct HomeHeaderView: View {
         .background(Color.white)
         .overlay(alignment: .bottom) {
             Rectangle()
-                .fill(Color(red: 0.55, green: 0.91, blue: 0.76))
+                .fill(Color(.main))
                 .frame(height: 1)
         }
     }
