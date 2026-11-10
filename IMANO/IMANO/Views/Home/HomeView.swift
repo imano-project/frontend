@@ -43,7 +43,7 @@ struct HomeView: View {
                 VStack(spacing: 16) {
                     // MARK: - Schedule
                     // ここに予定カードなどを配置
-                    
+                    ScheduleListView()
                     // MARK: - Location
                     if let location = homeViewModel.locationInfo {
                         Text("緯度: \(location.latitude)")
