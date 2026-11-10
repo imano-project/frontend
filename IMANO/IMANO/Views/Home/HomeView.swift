@@ -9,21 +9,21 @@ import SwiftUI
 import CoreLocation
 
 struct HomeView: View {
-
+    
     // MARK: - Properties
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
     @State private var isShowingFreeTime = true
     @State private var isShowingAddSchedule = false
-
+    
     // MARK: - Body
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Color(.background)
-                    .ignoresSafeArea()
+                .ignoresSafeArea()
             VStack(spacing: 0) {
-
+                
                 // MARK: - Fixed Header
                 HomeHeaderView(
                     yearText: dateViewModel.yearText,
@@ -31,7 +31,7 @@ struct HomeView: View {
                     dayText: dateViewModel.dayText,
                     weekdayText: dateViewModel.weekdayText
                 )
-
+                
                 // MARK: - Free Time
                 HStack {
                     Spacer()
@@ -41,7 +41,7 @@ struct HomeView: View {
                 }
                 .padding(.horizontal, 31)
                 .padding(.vertical, 8)
-
+                
                 // MARK: - Scroll Content
                 ScrollView {
                     VStack(spacing: 16) {
@@ -72,6 +72,13 @@ struct HomeView: View {
             AddScheduleView()
                 .presentationDetents([.fraction(0.75), .large])
                 .presentationDragIndicator(.visible)
+        }
+        .onAppear {
+            homeViewModel.startMonitoring()
+        }
+        .onChange(of: scenePhase) { newPhase in
+            guard newPhase == .active else { return }
+            dateViewModel.refresh()
         }
     }
 }
