@@ -15,36 +15,61 @@ struct HomeView: View {
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
     @State private var isShowingFreeTime = true
+    @State private var isShowingAddSchedule = false
 
     // MARK: - Body
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .bottomTrailing) {
+            VStack(spacing: 0) {
 
-            // MARK: - Fixed Header
-            HomeHeaderView(
-                yearText: dateViewModel.yearText,
-                monthText: dateViewModel.monthText,
-                dayText: dateViewModel.dayText,
-                weekdayText: dateViewModel.weekdayText
-            )
-
-            // MARK: - Free Time
-            HStack {
-                Spacer()
-                HomeFreeTimeView(
-                    isShowingFreeTime: $isShowingFreeTime
+                // MARK: - Fixed Header
+                HomeHeaderView(
+                    yearText: dateViewModel.yearText,
+                    monthText: dateViewModel.monthText,
+                    dayText: dateViewModel.dayText,
+                    weekdayText: dateViewModel.weekdayText
                 )
-            }
-            .padding(.horizontal, 31)
-            .padding(.vertical, 8)
 
-            // MARK: - Scroll Content
-            ScrollView {
-                VStack(spacing: 16) {
-                    // MARK: - Schedule
-                    ScheduleListView()
+                // MARK: - Free Time
+                HStack {
+                    Spacer()
+                    HomeFreeTimeView(
+                        isShowingFreeTime: $isShowingFreeTime
+                    )
+                }
+                .padding(.horizontal, 31)
+                .padding(.vertical, 8)
+
+                // MARK: - Scroll Content
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // MARK: - Schedule
+                        ScheduleListView()
+                    }
                 }
             }
+            // MARK: - Add Schedule Button
+            Button {
+                isShowingAddSchedule = true
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 28, weight: .medium))
+                    .foregroundStyle(.white)
+                    .frame(width: 56, height: 56)
+                    .background(Color(.mainButton))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color(.mainButton), lineWidth: 1)
+                    }
+            }
+            .padding(.trailing, 24)
+            .padding(.bottom, 24)
+        }
+        .sheet(isPresented: $isShowingAddSchedule) {
+            AddScheduleView()
+                .presentationDetents([.fraction(0.75), .large])
+                .presentationDragIndicator(.visible)
         }
     }
 }
