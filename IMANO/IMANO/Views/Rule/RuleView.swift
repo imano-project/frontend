@@ -38,8 +38,9 @@ struct RuleView: View {
 
                         // MARK: - Rule Count
                         Text("ユーザールール数：\(ruleItems.count)")
-                            .font(.system(size: 16))
+                            .font(AppFonts.sentence)
                             .foregroundStyle(.black)
+                            .padding(.leading, 51)
 
                         // MARK: - Rule List
                         VStack(spacing: 4) {

@@ -22,7 +22,7 @@ struct RuleCardView: View {
                 // TODO: ルールのメニューを表示
             } label: {
                 Image(systemName: "ellipsis")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.black.opacity(0.7))
                     .rotationEffect(.degrees(90))
                     .frame(width: 40, height: 40)
@@ -31,7 +31,7 @@ struct RuleCardView: View {
         }
         .padding(.horizontal, 8)
         .frame(maxWidth: .infinity)
-        .frame(height: 81)
+        .frame(height: 100)
         .background(Color(.systemGray5))
         .clipShape(RoundedRectangle(cornerRadius: 5))
     }
