@@ -34,6 +34,7 @@ struct RuleView: View {
 
                         // MARK: - Search
                         RuleSearchView(searchText: $searchText)
+                            .padding(.horizontal, 33)
 
                         // MARK: - Rule Count
                         Text("ユーザールール数：\(ruleItems.count)")
@@ -44,6 +45,7 @@ struct RuleView: View {
                         VStack(spacing: 4) {
                             ForEach(ruleItems, id: \.self) { _ in
                                 RuleCardView()
+                                    .padding(.horizontal, 51)
                             }
                         }
                     }

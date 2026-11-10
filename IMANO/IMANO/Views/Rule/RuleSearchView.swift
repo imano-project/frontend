@@ -19,9 +19,9 @@ struct RuleSearchView: View {
     var body: some View {
         TextField("検索", text: $searchText)
             .font(.system(size: 16))
-            .padding(.horizontal, 16)
-            .frame(height: 40)
-            .background(Color(.systemGray5))
+            .padding(.horizontal, 18)
+            .frame(height: 50)
+            .background(Color(.gray))
             .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }
