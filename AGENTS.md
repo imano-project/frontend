@@ -5,21 +5,26 @@ AIコーディングエージェント（Claude Code、Codex など）向けの�
 
 ## プロジェクト概要
 
-- IMANO の iOS フロントエンド（Swift / Xcode）
-- TODO: アプリの概要、主要な画面や機能
+- IMANO の iOS フロントエンド（Swift / SwiftUI / Xcode）
+- 画面はタブで切り替える 3 つ: ホーム（日付・時刻、位置情報、移動状態、天気）、ルール（仮）、設定（仮）
+- TODO: アプリの概要（誰の何を助けるアプリか）
 
 ## 開発環境
 
-- TODO: Xcode のバージョン、対応する iOS の最低バージョン
-- TODO: 依存管理（Swift Package Manager など）
+- Xcode のプロジェクトは `IMANO/IMANO.xcodeproj`。Xcode 26.0.1 で作成
+- 対応する iOS の最低バージョンは 26.0（iPhone と iPad）
+- 外部のパッケージは使っていない（Swift Package Manager などの依存はない）
+- 使っている Apple のフレームワーク: SwiftUI、SwiftData、Combine、CoreLocation、CoreMotion、WeatherKit
+- 開発の作業ブランチは `develop`。機能ごとに `feature/...` のブランチを切って PR を出す
 
 ## ビルド・テスト
 
-- TODO: ビルドのコマンドやスキーム名
-- TODO: テストの実行方法
+- TODO: ビルドのコマンドやスキーム名（共有スキームはまだリポジトリにない）
+- テストのターゲットはまだない
 
 ## コーディング規約
 
+- チームの開発ルール（MVVM、命名、View の分割、状態管理）は [README.md](README.md) にある。まずこれに従う
 - 既存のコードの書き方（命名、ファイル構成、コメントの量）に合わせる
 - 設計のルールは [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)、名前は [docs/GLOSSARY.md](docs/GLOSSARY.md) に従う
 
