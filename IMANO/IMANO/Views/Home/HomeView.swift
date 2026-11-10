@@ -14,7 +14,8 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
-    
+    @State private var isShowingFreeTime = true
+
     // MARK: - body
     var body: some View {
         VStack {
@@ -25,8 +26,16 @@ struct HomeView: View {
                 dayText: dateViewModel.dayText,
                 weekdayText: dateViewModel.weekdayText
             )
-            .padding()
-            
+
+            // MARK: - Free Time
+            HStack {
+                Spacer()
+                HomeFreeTimeView(
+                    isShowingFreeTime: $isShowingFreeTime
+                )
+            }
+            .padding(.horizontal, 31)
+
             // MARK: - Location
             if let location = homeViewModel.locationInfo {
                 Text("緯度: \(location.latitude)")

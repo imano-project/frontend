@@ -62,7 +62,7 @@ struct HomeHeaderView: View {
                         )
                 }
             }
-            .frame(height: 76)
+            .frame(height: 80)
         }
         .foregroundStyle(.black)
         .padding(.horizontal, 12)
