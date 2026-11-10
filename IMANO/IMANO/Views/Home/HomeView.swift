@@ -20,6 +20,8 @@ struct HomeView: View {
     // MARK: - Body
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
+            Color(.background)
+                    .ignoresSafeArea()
             VStack(spacing: 0) {
 
                 // MARK: - Fixed Header
