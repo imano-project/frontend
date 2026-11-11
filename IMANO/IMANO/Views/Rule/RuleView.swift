@@ -5,7 +5,6 @@
 //  Created by 川岸遥奈 on 2026/10/28.
 //
 
-
 import SwiftUI
 
 // MARK: - Rule View
@@ -61,15 +60,14 @@ struct RuleView: View {
                 isShowingAddRule = true
             } label: {
                 Image(systemName: "plus")
-                    .font(.system(size: 24, weight: .medium))
+                    .font(.system(size: 28, weight: .medium))
                     .foregroundStyle(.white)
-                    .frame(width: 40, height: 40)
+                    .frame(width: 56, height: 56)
                     .background(Color(.mainButton))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-            .buttonStyle(.plain)
-            .padding(.trailing, 0)
-            .padding(.bottom, 16)
+            .padding(.trailing, 24)
+            .padding(.bottom, 24)
         }
         .sheet(isPresented: $isShowingAddRule) {
             Text("ルール追加画面")

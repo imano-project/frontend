@@ -5,18 +5,16 @@
 //  Created by 川岸遥奈 on 2026/11/10.
 //
 
-
-
 import SwiftUI
 
 // MARK: - Rule Card View
 struct RuleCardView: View {
-
+    
     // MARK: - Body
     var body: some View {
         HStack {
             Spacer()
-
+            
             // MARK: - Menu Button
             Button {
                 // TODO: ルールのメニューを表示

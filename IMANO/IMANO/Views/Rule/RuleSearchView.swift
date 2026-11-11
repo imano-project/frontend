@@ -5,16 +5,14 @@
 //  Created by 川岸遥奈 on 2026/11/10.
 //
 
-
-
 import SwiftUI
 
 // MARK: - Rule Search View
 struct RuleSearchView: View {
-
+    
     // MARK: - Properties
     @Binding var searchText: String
-
+    
     // MARK: - Body
     var body: some View {
         TextField("検索", text: $searchText)
