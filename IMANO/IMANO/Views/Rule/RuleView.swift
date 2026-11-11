@@ -5,6 +5,7 @@
 //  Created by 川岸遥奈 on 2026/10/28.
 //
 
+
 import SwiftUI
 
 // MARK: - Rule View
@@ -13,9 +14,36 @@ struct RuleView: View {
     // MARK: - Properties
     @State private var searchText = ""
     @State private var isShowingAddRule = false
+    @State private var rules = Self.loadSampleRules()
 
-    // 仮データ
-    private let ruleItems = Array(0..<10)
+    // MARK: - Search Matching
+    private func matchesSearch(_ text: String, query: String) -> Bool {
+        let normalizedText = text.applyingTransform(
+            .hiraganaToKatakana,
+            reverse: false
+        ) ?? text
+        let normalizedQuery = query.applyingTransform(
+            .hiraganaToKatakana,
+            reverse: false
+        ) ?? query
+        return normalizedText.localizedCaseInsensitiveContains(normalizedQuery)
+    }
+    // MARK: - Filtered Rules
+    private var filteredRules: [UserRule] {
+        let query = searchText.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+        guard !query.isEmpty else {
+            return rules
+        }
+        return rules.filter { rule in
+            matchesSearch(rule.name, query: query)
+            || matchesSearch(rule.type, query: query)
+            || (rule.condition.keywords ?? []).contains {
+                matchesSearch($0, query: query)
+            }
+        }
+    }
 
     // MARK: - Body
     var body: some View {
@@ -29,29 +57,40 @@ struct RuleView: View {
 
                 // MARK: - Rule Content
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 12) {
 
                         // MARK: - Search
                         RuleSearchView(searchText: $searchText)
-                            .padding(.horizontal, 33)
 
                         // MARK: - Rule Count
-                        Text("ユーザールール数：\(ruleItems.count)")
+                        Text("ユーザールール数：\(rules.count)")
                             .font(AppFonts.sentence)
                             .foregroundStyle(.black)
-                            .padding(.leading, 51)
 
                         // MARK: - Rule List
-                        VStack(spacing: 4) {
-                            ForEach(ruleItems, id: \.self) { _ in
-                                RuleCardView()
-                                    .padding(.horizontal, 51)
+                        if filteredRules.isEmpty {
+                            ContentUnavailableView(
+                                searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? "ルールがありません"
+                                : "検索結果がありません",
+                                systemImage: searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? "list.bullet"
+                                : "magnifyingglass"
+                            )
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 32)
+
+                        } else {
+                            LazyVStack(spacing: 8) {
+                                ForEach(filteredRules) { rule in
+                                    RuleCardView(rule: rule)
+                                }
                             }
                         }
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 24)
                     .padding(.top, 12)
-                    .padding(.bottom, 80)
+                    .padding(.bottom, 96)
                 }
             }
 
@@ -66,6 +105,8 @@ struct RuleView: View {
                     .background(Color(.mainButton))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("ルールを追加")
             .padding(.trailing, 24)
             .padding(.bottom, 24)
         }
@@ -75,5 +116,47 @@ struct RuleView: View {
                 .presentationDragIndicator(.visible)
         }
     }
-}
 
+    // MARK: - Sample Data
+    private static func loadSampleRules() -> [UserRule] {
+        let json = """
+        {
+          "rules": [
+            {
+              "id": "ru_01",
+              "name": "バイトは10分前に到着",
+              "type": "arrival_buffer",
+              "enabled": true,
+              "condition": {
+                "placeId": "pl_work",
+                "keywords": ["バイト", "アルバイト", "仕事"]
+              },
+              "action": {
+                "minutes": 10
+              }
+            },
+            {
+              "id": "ru_02",
+              "name": "バイトの出発通知",
+              "type": "departure_notification",
+              "enabled": true,
+              "condition": {
+                "placeId": "pl_work"
+              },
+              "action": {
+                "minutesBefore": 15
+              }
+            }
+          ]
+        }
+        """
+        guard let data = json.data(using: .utf8),
+              let response = try? JSONDecoder().decode(
+                RuleResponse.self,
+                from: data
+              ) else {
+            return []
+        }
+        return response.rules
+    }
+}
