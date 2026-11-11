@@ -14,18 +14,33 @@ struct IMANOApp: App {
         let schema = Schema([
             Item.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false
+        )
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(
+                for: schema,
+                configurations: [modelConfiguration]
+            )
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-    // MARK: - body
+
+    // MARK: - Properties
+    @State private var isShowingSetup = false
+
+    // MARK: - Body
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            if isShowingSetup {
+                MainTabView()
+            } else {
+                LoginView {
+                    isShowingSetup = true
+                }
+            }
         }
         .modelContainer(sharedModelContainer)
     }
