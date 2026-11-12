@@ -34,13 +34,7 @@ struct IMANOApp: App {
     // MARK: - Body
     var body: some Scene {
         WindowGroup {
-            if isShowingSetup {
-                MainTabView()
-            } else {
-                LoginView {
-                    isShowingSetup = true
-                }
-            }
+            RootView()
         }
         .modelContainer(sharedModelContainer)
     }
