@@ -5,25 +5,20 @@
 //  Created by 川岸遥奈 on 2026/11/12.
 //
 
-
-
 import SwiftUI
 
 struct CalendarSetupView: View {
 
     // MARK: - Properties
-
     var onNext: () -> Void
     var onSkip: () -> Void
     var onGoogleConnect: () -> Void
 
     // MARK: - Body
-
     var body: some View {
         VStack(spacing: 0) {
 
             // MARK: - Progress Indicator
-
             HStack(spacing: 5) {
                 ForEach(0..<4, id: \.self) { index in
                     Capsule()
@@ -39,35 +34,27 @@ struct CalendarSetupView: View {
             .padding(.top, 30)
 
             // MARK: - Title
-
             VStack(spacing: 12) {
                 Text("カレンダー連携")
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
-
                 Text("なぜ連携が必要なのかの説明")
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
                     .multilineTextAlignment(.center)
             }
             .padding(.top, 45)
-
             Spacer()
 
             // MARK: - Google Calendar
-
             VStack(spacing: 18) {
-
                 Text("googleカレンダー")
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
-
                 Text("アカウントを連携して下さい")
                     .font(AppFonts.body)
                     .foregroundStyle(.secondary)
-
                 // Google Connect Button
-
                 Button {
                     onGoogleConnect()
                 } label: {
@@ -96,13 +83,10 @@ struct CalendarSetupView: View {
                     .stroke(Color.main, lineWidth: 1)
             }
             .padding(.horizontal, 40)
-
             Spacer()
 
             // MARK: - Action Buttons
-
             VStack(spacing: 20) {
-
                 Button {
                     onSkip()
                 } label: {
@@ -116,7 +100,6 @@ struct CalendarSetupView: View {
                                 .stroke(Color.text, lineWidth: 1)
                         }
                 }
-
                 Button {
                     onNext()
                 } label: {

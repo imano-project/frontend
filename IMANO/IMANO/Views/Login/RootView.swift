@@ -5,14 +5,11 @@
 //  Created by 川岸遥奈 on 2026/11/12.
 //
 
-
-
 import SwiftUI
 
 struct RootView: View {
 
     // MARK: - Screen
-
     private enum Screen {
         case login
         case permission
@@ -23,27 +20,23 @@ struct RootView: View {
     }
 
     // MARK: - Properties
-
     @State private var currentScreen: Screen = .login
 
     @State private var homeAddress = ""
     @State private var additionalAddresses: [AddressFormItem] = []
 
     // MARK: - Body
-
     var body: some View {
         Group {
             switch currentScreen {
 
-            // MARK: - Login
-
+                // MARK: - Login
             case .login:
                 LoginView {
                     currentScreen = .permission
                 }
 
-            // MARK: - Permission
-
+                // MARK: - Permission
             case .permission:
                 SetupView(
                     onNext: {
@@ -51,8 +44,7 @@ struct RootView: View {
                     }
                 )
 
-            // MARK: - Address
-
+                // MARK: - Address
             case .address:
                 AddressSetupView(
                     onNext: { home, addresses in
@@ -65,8 +57,7 @@ struct RootView: View {
                     }
                 )
 
-            // MARK: - Calendar
-
+                // MARK: - Calendar
             case .calendar:
                 CalendarSetupView(
                     onNext: {
@@ -80,8 +71,7 @@ struct RootView: View {
                     }
                 )
 
-            // MARK: - Widget
-
+                // MARK: - Widget
             case .widget:
                 WidgetSetupView(
                     onNext: {
@@ -92,8 +82,7 @@ struct RootView: View {
                     }
                 )
 
-            // MARK: - Main
-
+                // MARK: - Main
             case .main:
                 MainTabView()
             }

@@ -5,12 +5,9 @@
 //  Created by 川岸遥奈 on 2026/11/12.
 //
 
-
-
 import SwiftUI
 
 // MARK: - Address Form Item
-
 struct AddressFormItem: Identifiable {
     let id = UUID()
     var title: String
@@ -18,28 +15,22 @@ struct AddressFormItem: Identifiable {
 }
 
 // MARK: - Address Setup View
-
 struct AddressSetupView: View {
-
+    
     // MARK: - Properties
-
     var onNext: (String, [AddressFormItem]) -> Void
     var onSkip: () -> Void
-
     @State private var homeAddress = ""
-
     @State private var additionalAddresses = [
         AddressFormItem(title: "学校"),
         AddressFormItem(title: "職場")
     ]
-
+    
     // MARK: - Body
-
     var body: some View {
         VStack(spacing: 0) {
-
+            
             // MARK: - Progress Indicator
-
             HStack(spacing: 5) {
                 ForEach(0..<4, id: \.self) { index in
                     Capsule()
@@ -49,34 +40,28 @@ struct AddressSetupView: View {
             }
             .padding(.horizontal, 50)
             .padding(.top, 30)
-
+            
             // MARK: - Title
-
             VStack(spacing: 12) {
                 Text("住所登録")
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
-
+                
                 Text("なぜ登録が必要なのかの説明")
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
             }
             .padding(.top, 45)
-
+            
             // MARK: - Address List
-
             VStack(spacing: 25) {
-
                 // Home Address
-
                 addressField(
                     title: "自宅",
                     address: $homeAddress,
                     canDelete: false
                 )
-
                 // Additional Addresses
-
                 ForEach($additionalAddresses) { $item in
                     HStack(alignment: .top, spacing: 10) {
                         addressField(
@@ -84,7 +69,6 @@ struct AddressSetupView: View {
                             address: $item.address,
                             canDelete: true
                         )
-
                         Button {
                             additionalAddresses.removeAll {
                                 $0.id == item.id
@@ -98,9 +82,7 @@ struct AddressSetupView: View {
                         .padding(.top, 2)
                     }
                 }
-
                 // Add Address Button
-
                 Button {
                     additionalAddresses.append(
                         AddressFormItem(title: "その他")
@@ -122,13 +104,11 @@ struct AddressSetupView: View {
             }
             .padding(.horizontal, 40)
             .padding(.top, 55)
-
+            
             Spacer(minLength: 20)
-
+            
             // MARK: - Action Buttons
-
             VStack(spacing: 20) {
-
                 Button {
                     onSkip()
                 } label: {
@@ -142,7 +122,6 @@ struct AddressSetupView: View {
                                 .stroke(Color.text, lineWidth: 1)
                         }
                 }
-
                 Button {
                     onNext(homeAddress, additionalAddresses)
                 } label: {
@@ -165,20 +144,17 @@ struct AddressSetupView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
     }
-
+    
     // MARK: - Address Field
-
     private func addressField(
         title: String,
         address: Binding<String>,
         canDelete: Bool
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-
             Text(title)
                 .font(AppFonts.body)
                 .foregroundStyle(Color.text)
-
             TextField("住所入力", text: address)
                 .font(AppFonts.body)
                 .padding(.horizontal, 12)
