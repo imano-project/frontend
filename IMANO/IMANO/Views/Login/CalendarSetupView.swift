@@ -35,9 +35,9 @@ struct CalendarSetupView: View {
                         onGoogleConnect()
                     } label: {
                         HStack(spacing: 12) {
-                            Text("G")
-                                .font(.system(size: 26, weight: .bold))
-                                .foregroundStyle(Color.blue)
+                            Image("icon_google")
+                                .resizable()
+                                .frame(width: 20, height: 20)
                             Text("Continue with Google")
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundStyle(Color.black)
@@ -102,7 +102,7 @@ struct CalendarSetupView: View {
                             onSkip()
                         } label: {
                             Text("スキップ")
-                                .font(AppFonts.body)
+                                .font(AppFonts.blackButtonText)
                                 .foregroundStyle(Color.text)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 50)
@@ -115,7 +115,7 @@ struct CalendarSetupView: View {
                             onNext()
                         } label: {
                             Text("次へ")
-                                .font(AppFonts.body)
+                                .font(AppFonts.buttonText)
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 50)
@@ -137,13 +137,4 @@ struct CalendarSetupView: View {
         }
         .ignoresSafeArea()
     }
-}
-
-// MARK: - Preview
-#Preview {
-    CalendarSetupView(
-        onNext: {},
-        onSkip: {},
-        onGoogleConnect: {}
-    )
 }
