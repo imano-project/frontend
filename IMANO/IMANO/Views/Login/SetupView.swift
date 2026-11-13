@@ -101,8 +101,3 @@ struct SetupView: View {
             .background(Color(.background))
     }
 }
-
-#Preview {
-    SetupView(onNext: {})
-}
-
