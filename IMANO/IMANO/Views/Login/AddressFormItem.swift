@@ -115,7 +115,7 @@ struct AddressSetupView: View {
                         .font(AppFonts.body)
                         .foregroundStyle(Color.text)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 70)
+                        .frame(height: 50)
                         .overlay {
                             RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.text, lineWidth: 1)
@@ -129,7 +129,7 @@ struct AddressSetupView: View {
                         .font(AppFonts.body)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 70)
+                        .frame(height: 50)
                         .background(
                             Color(.mainButton),
                             in: RoundedRectangle(cornerRadius: 6)
@@ -185,12 +185,4 @@ struct AddressSetupView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-}
-
-// MARK: - Preview
-#Preview {
-    AddressSetupView(
-        onNext: { homeAddress, additionalAddresses in },
-        onSkip: {}
-    )
 }

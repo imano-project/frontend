@@ -90,7 +90,7 @@ struct SetupView: View {
                         .font(AppFonts.body)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 60)
+                        .frame(height: 50)
                         .background(Color.mainButton)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
