@@ -19,6 +19,7 @@ struct LoginView: View {
                 .ignoresSafeArea()
             VStack(spacing: 8) {
                 Spacer()
+                    .frame(height: 30)
 
                 // MARK: - App Title
                 Text("IMANO")

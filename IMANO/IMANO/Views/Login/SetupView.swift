@@ -26,7 +26,7 @@ struct SetupView: View {
         ),
         (
             "トラッキング",
-            "利用目的を確認したうえで、\n必要な場合のみ使用します。"
+            "利用目的を確認したうえで、必要な場合のみ使用します。"
         )
     ]
 
@@ -55,12 +55,13 @@ struct SetupView: View {
                         Text(permission.description)
                             .font(AppFonts.sentence)
                             .foregroundStyle(Color.text)
-                            .multilineTextAlignment(.center)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity)
                     .frame(maxHeight: .infinity)
-                    .padding(.horizontal, 28)
+                    .padding(.horizontal, 20)
                     if index < permissions.count - 1 {
                         Divider()
                             .padding(.horizontal, 12)
@@ -73,7 +74,7 @@ struct SetupView: View {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(Color.main, lineWidth: 2)
             }
-            .padding(.horizontal, 64)
+            .padding(.horizontal, 40)
             .padding(.top, 35)
             .padding(.bottom, 30)
 
@@ -97,5 +98,11 @@ struct SetupView: View {
             Color(.background)
                 .ignoresSafeArea()
         }
+    }
+}
+
+#Preview {
+    SetupView {
+
     }
 }
