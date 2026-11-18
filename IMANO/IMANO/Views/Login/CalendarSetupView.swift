@@ -5,7 +5,6 @@
 //  Created by 川岸遥奈 on 2026/11/12.
 //
 
-
 import SwiftUI
 
 struct CalendarSetupView: View {
@@ -19,6 +18,10 @@ struct CalendarSetupView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
+
+                // MARK: - Background
+                Color(.background)
+                    .ignoresSafeArea()
 
                 // MARK: - Google Calendar
                 VStack(spacing: 2) {
@@ -38,6 +41,7 @@ struct CalendarSetupView: View {
                             Image("icon_google")
                                 .resizable()
                                 .frame(width: 20, height: 20)
+
                             Text("Continue with Google")
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundStyle(Color.black)
@@ -61,26 +65,17 @@ struct CalendarSetupView: View {
                 // ディスプレイ全体の中央に配置
                 .position(
                     x: geometry.size.width / 2,
-                    y: geometry.size.height / 2
+                    y: (geometry.size.height
+                        + geometry.safeAreaInsets.top
+                        - geometry.safeAreaInsets.bottom) / 2
                 )
 
                 // MARK: - Header and Action Buttons
                 VStack(spacing: 0) {
 
                     // MARK: - Progress Indicator
-                    HStack(spacing: 5) {
-                        ForEach(0..<4, id: \.self) { index in
-                            Capsule()
-                                .fill(
-                                    index < 2
-                                    ? Color.main
-                                    : Color.gray.opacity(0.15)
-                                )
-                                .frame(height: 10)
-                        }
-                    }
-                    .padding(.horizontal, 50)
-                    .padding(.top, max(geometry.safeAreaInsets.top, 59) + 30)
+                    SetupProgressBar(currentStep: 2)
+                        .padding(.top, 30)
 
                     // MARK: - Title
                     VStack(spacing: 12) {
@@ -126,15 +121,17 @@ struct CalendarSetupView: View {
                         }
                     }
                     .padding(.horizontal, 25)
-                    .padding(.bottom, geometry.safeAreaInsets.bottom + 25)
+                    .padding(.bottom, 25)
                 }
+                .frame(
+                    width: geometry.size.width,
+                    height: geometry.size.height
+                )
             }
             .frame(
                 width: geometry.size.width,
                 height: geometry.size.height
             )
-            .background(Color(.background))
         }
-        .ignoresSafeArea()
     }
 }

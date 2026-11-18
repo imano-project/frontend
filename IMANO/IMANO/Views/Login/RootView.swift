@@ -21,7 +21,6 @@ struct RootView: View {
 
     // MARK: - Properties
     @State private var currentScreen: Screen = .login
-
     @State private var homeAddress = ""
     @State private var additionalAddresses: [AddressFormItem] = []
 

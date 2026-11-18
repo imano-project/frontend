@@ -32,72 +32,70 @@ struct SetupView: View {
 
     // MARK: - Body
     var body: some View {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
 
-                // MARK: - Progress Indicator
-                HStack(spacing: 5) {
-                    ForEach(0..<4, id: \.self) { _ in
-                        Capsule()
-                            .fill(Color.text.opacity(0.15))
-                            .frame(height: 10)
-                    }
-                }
-                .padding(.horizontal, 50)
+            // MARK: - Progress Indicator
+            SetupProgressBar(currentStep: 0)
                 .padding(.top, 30)
 
-                // MARK: - Title
-                Text("許可が必要なもの")
-                    .font(AppFonts.heading)
-                    .foregroundStyle(Color.text)
-                    .padding(.top, 32)
+            // MARK: - Title
+            Text("許可が必要なもの")
+                .font(AppFonts.heading)
+                .foregroundStyle(Color.text)
+                .padding(.top, 32)
 
-                // MARK: - Permission List
-                VStack(spacing: 0) {
-                    ForEach(Array(permissions.enumerated()), id: \.offset) { index, permission in
-                        VStack(spacing: 12) {
-                            Text(permission.title)
-                                .font(AppFonts.subheading)
-                                .foregroundStyle(Color.text)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Text(permission.description)
-                                .font(AppFonts.sentence)
-                                .foregroundStyle(Color.text)
-                                .multilineTextAlignment(.center)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(maxHeight: .infinity)
-                        .padding(.horizontal, 28)
-                        if index < permissions.count - 1 {
-                            Divider()
-                                .padding(.horizontal, 12)
-                        }
+            // MARK: - Permission List
+            VStack(spacing: 0) {
+                ForEach(Array(permissions.enumerated()), id: \.offset) { index, permission in
+                    VStack(spacing: 12) {
+                        Text(permission.title)
+                            .font(AppFonts.subheading)
+                            .foregroundStyle(Color.text)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(permission.description)
+                            .font(AppFonts.sentence)
+                            .foregroundStyle(Color.text)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: .infinity)
+                    .padding(.horizontal, 28)
+                    if index < permissions.count - 1 {
+                        Divider()
+                            .padding(.horizontal, 12)
                     }
                 }
-                .frame(maxHeight: .infinity)
-                .background(Color.white)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.main, lineWidth: 2)
-                }
-                .padding(.horizontal, 64)
-                .padding(.top, 35)
-                .padding(.bottom, 30)
-                Button {
-                    onNext()
-                } label: {
-                    Text("次へ")
-                        .font(AppFonts.body)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.mainButton)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 30)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.background))
+            .frame(maxHeight: .infinity)
+            .background(Color.white)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.main, lineWidth: 2)
+            }
+            .padding(.horizontal, 64)
+            .padding(.top, 35)
+            .padding(.bottom, 30)
+
+            // MARK: - Action Buttons
+            Button {
+                onNext()
+            } label: {
+                Text("次へ")
+                    .font(AppFonts.body)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(Color.mainButton)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .padding(.horizontal, 40)
+            .padding(.bottom, 25)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            Color(.background)
+                .ignoresSafeArea()
+        }
     }
 }

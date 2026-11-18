@@ -1,5 +1,5 @@
 //
-//  AddressFormItem.swift
+//  AddressSetupView.swift
 //  IMANO
 //
 //  Created by 川岸遥奈 on 2026/11/12.
@@ -31,15 +31,8 @@ struct AddressSetupView: View {
         VStack(spacing: 0) {
 
             // MARK: - Progress Indicator
-            HStack(spacing: 5) {
-                ForEach(0..<4, id: \.self) { index in
-                    Capsule()
-                        .fill(index == 0 ? Color.main : Color.gray.opacity(0.15))
-                        .frame(height: 10)
-                }
-            }
-            .padding(.horizontal, 50)
-            .padding(.top, 30)
+            SetupProgressBar(currentStep: 1)
+                .padding(.top, 30)
 
             // MARK: - Title
             VStack(spacing: 12) {
@@ -131,7 +124,7 @@ struct AddressSetupView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .background(
-                            Color(.mainButton),
+                            Color.mainButton,
                             in: RoundedRectangle(cornerRadius: 6)
                         )
                 }
@@ -147,7 +140,10 @@ struct AddressSetupView: View {
             .padding(.bottom, 25)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.background))
+        .background {
+            Color(.background)
+                .ignoresSafeArea()
+        }
     }
 
     // MARK: - Address Field

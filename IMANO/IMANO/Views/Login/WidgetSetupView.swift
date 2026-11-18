@@ -17,20 +17,7 @@ struct WidgetSetupView: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // MARK: - Progress Indicator
-            HStack(spacing: 5) {
-                ForEach(0..<4, id: \.self) { index in
-                    Capsule()
-                        .fill(
-                            index < 3
-                            ? Color.main
-                            : Color.gray.opacity(0.15)
-                        )
-                        .frame(height: 10)
-                }
-            }
-            .padding(.horizontal, 50)
-            .padding(.top, 30)
+            SetupProgressBar(currentStep: 3)
 
             // MARK: - Title
             VStack(spacing: 8) {
