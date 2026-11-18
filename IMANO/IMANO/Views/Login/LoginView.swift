@@ -14,22 +14,22 @@ struct LoginView: View {
 
     // MARK: - Body
     var body: some View {
-        ZStack {
-            Color(.background)
-                .ignoresSafeArea()
-            VStack(spacing: 8) {
+            VStack(spacing: 0) {
                 Spacer()
+                VStack(spacing: 8) {
 
-                // MARK: - App Title
-                Text("IMANO")
-                    .font(AppFonts.logoText)
-                    .foregroundStyle(Color(.text))
+                    // MARK: - App Title
+                    Text("IMANO")
+                        .font(AppFonts.logoText)
+                        .foregroundStyle(Color(.text))
 
-                // MARK: - App Description
-                Text("今の自分に必要な情報だけ。")
-                    .font(AppFonts.body)
-                    .foregroundStyle(Color(.text))
-                    .multilineTextAlignment(.center)
+                    // MARK: - App Description
+                    Text("今の自分に必要な情報だけ。")
+                        .font(AppFonts.body)
+                        .foregroundStyle(Color(.text))
+                        .multilineTextAlignment(.center)
+                }
+                .offset(y: -50)
                 Spacer()
 
                 // MARK: - Start Guide
@@ -39,6 +39,9 @@ struct LoginView: View {
                     .frame(height: 20)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            Color(.background)
+                .ignoresSafeArea()
         }
         .contentShape(Rectangle())
         .onTapGesture {
