@@ -13,7 +13,6 @@ struct AddressFormItem: Identifiable {
     var title: String
     var address: String = ""
     var isCustom: Bool = false
-
 }
 
 // MARK: - Address Setup View
@@ -27,6 +26,19 @@ struct AddressSetupView: View {
         AddressFormItem(title: "学校"),
         AddressFormItem(title: "職場")
     ]
+
+    // MARK: - Validation
+    private var hasValidAddress: Bool {
+        let hasHomeAddress = !homeAddress
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty
+        let hasAdditionalAddress = additionalAddresses.contains { item in
+            !item.address
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .isEmpty
+        }
+        return hasHomeAddress || hasAdditionalAddress
+    }
 
     // MARK: - Body
     var body: some View {
@@ -131,17 +143,8 @@ struct AddressSetupView: View {
                             in: RoundedRectangle(cornerRadius: 6)
                         )
                 }
-                .disabled(
-                    homeAddress.trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    ).isEmpty
-                )
-                .opacity(
-                    homeAddress.trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    ).isEmpty
-                    ? 0.5 : 1
-                )
+                .disabled(!hasValidAddress)
+                .opacity(hasValidAddress ? 1 : 0.5)
             }
             .padding(.horizontal, 25)
             .padding(.bottom, 25)
