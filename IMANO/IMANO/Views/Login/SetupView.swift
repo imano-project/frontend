@@ -82,7 +82,7 @@ struct SetupView: View {
                 onNext()
             } label: {
                 Text("次へ")
-                    .font(AppFonts.body)
+                    .font(AppFonts.buttonText)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)

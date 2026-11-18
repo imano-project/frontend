@@ -105,7 +105,7 @@ struct AddressSetupView: View {
                     onSkip()
                 } label: {
                     Text("スキップ")
-                        .font(AppFonts.body)
+                        .font(AppFonts.blackButtonText)
                         .foregroundStyle(Color.text)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
@@ -119,7 +119,7 @@ struct AddressSetupView: View {
                     onNext(homeAddress, additionalAddresses)
                 } label: {
                     Text("次へ")
-                        .font(AppFonts.body)
+                        .font(AppFonts.buttonText)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)

@@ -17,7 +17,9 @@ struct WidgetSetupView: View {
     var body: some View {
         VStack(spacing: 0) {
 
+            // MARK: - Progress Indicator
             SetupProgressBar(currentStep: 3)
+                .padding(.top, 30)
 
             // MARK: - Title
             VStack(spacing: 8) {
@@ -30,7 +32,7 @@ struct WidgetSetupView: View {
                     .multilineTextAlignment(.center)
             }
             .padding(.top, 45)
-            Spacer()
+            Spacer(minLength: 20)
 
             // MARK: - Widget Illustration
             ZStack {
@@ -40,10 +42,9 @@ struct WidgetSetupView: View {
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 580)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 40)
-            Spacer()
+            Spacer(minLength: 20)
 
             // MARK: - Action Buttons
             VStack(spacing: 20) {
@@ -51,10 +52,10 @@ struct WidgetSetupView: View {
                     onSkip()
                 } label: {
                     Text("スキップ")
-                        .font(AppFonts.body)
+                        .font(AppFonts.blackButtonText)
                         .foregroundStyle(Color.text)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 80)
+                        .frame(height: 50)
                         .overlay {
                             RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.text, lineWidth: 1)
@@ -64,10 +65,10 @@ struct WidgetSetupView: View {
                     onNext()
                 } label: {
                     Text("次へ")
-                        .font(AppFonts.body)
+                        .font(AppFonts.buttonText)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 80)
+                        .frame(height: 50)
                         .background(
                             Color.main,
                             in: RoundedRectangle(cornerRadius: 6)
@@ -78,6 +79,9 @@ struct WidgetSetupView: View {
             .padding(.bottom, 25)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground))
+        .background {
+            Color(.background)
+                .ignoresSafeArea()
+        }
     }
 }
