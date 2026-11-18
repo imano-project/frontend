@@ -12,6 +12,8 @@ struct AddressFormItem: Identifiable {
     let id = UUID()
     var title: String
     var address: String = ""
+    var isCustom: Bool = false
+
 }
 
 // MARK: - Address Setup View
@@ -51,17 +53,18 @@ struct AddressSetupView: View {
             // MARK: - Address List
             ScrollView {
                 VStack(spacing: 25) {
-                    // Home Address
                     addressField(
                         title: "自宅",
                         address: $homeAddress
                     )
-                    // Additional Addresses
                     ForEach($additionalAddresses) { $item in
                         addressField(
                             title: item.title,
                             address: $item.address,
                             canDelete: true,
+                            titleBinding: item.isCustom
+                                ? $item.title
+                                : nil,
                             onDelete: {
                                 additionalAddresses.removeAll {
                                     $0.id == item.id
@@ -69,10 +72,12 @@ struct AddressSetupView: View {
                             }
                         )
                     }
-                    // Add Address Button
                     Button {
                         additionalAddresses.append(
-                            AddressFormItem(title: "その他")
+                            AddressFormItem(
+                                title: "",
+                                isCustom: true
+                            )
                         )
                     } label: {
                         Image(systemName: "plus")
@@ -100,7 +105,6 @@ struct AddressSetupView: View {
 
             // MARK: - Action Buttons
             VStack(spacing: 20) {
-                // Skip Button
                 Button {
                     onSkip()
                 } label: {
@@ -114,7 +118,6 @@ struct AddressSetupView: View {
                                 .stroke(Color.text, lineWidth: 1)
                         }
                 }
-                // Next Button
                 Button {
                     onNext(homeAddress, additionalAddresses)
                 } label: {
@@ -129,10 +132,14 @@ struct AddressSetupView: View {
                         )
                 }
                 .disabled(
-                    homeAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    homeAddress.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ).isEmpty
                 )
                 .opacity(
-                    homeAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    homeAddress.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ).isEmpty
                     ? 0.5 : 1
                 )
             }
@@ -151,14 +158,23 @@ struct AddressSetupView: View {
         title: String,
         address: Binding<String>,
         canDelete: Bool = false,
+        titleBinding: Binding<String>? = nil,
         onDelete: (() -> Void)? = nil
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Title and Delete Button
             HStack {
-                Text(title)
+                if let titleBinding {
+                    TextField(
+                        "場所の名前を入力",
+                        text: titleBinding
+                    )
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
+                } else {
+                    Text(title)
+                        .font(AppFonts.body)
+                        .foregroundStyle(Color.text)
+                }
                 Spacer()
                 if canDelete {
                     Button {
@@ -171,7 +187,6 @@ struct AddressSetupView: View {
                     }
                 }
             }
-            // Address TextField
             TextField("住所入力", text: address)
                 .font(AppFonts.body)
                 .padding(.horizontal, 12)

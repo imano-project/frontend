@@ -100,9 +100,3 @@ struct SetupView: View {
         }
     }
 }
-
-#Preview {
-    SetupView {
-
-    }
-}
