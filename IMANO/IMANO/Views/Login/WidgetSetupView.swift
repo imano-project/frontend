@@ -24,9 +24,9 @@ struct WidgetSetupView: View {
             // MARK: - Title
             VStack(spacing: 8) {
                 Text("widgetを追加して下さい")
-                    .font(AppFonts.body)
+                    .font(AppFonts.heading)
                     .foregroundStyle(Color.text)
-                Text("なぜ登録が必要なのかの説明")
+                Text("ウィジェットを追加すると、\nアプリを開かなくても、出発時間や\n雨の日の持ち物など、今必要な情報を確認できます。")
                     .font(AppFonts.body)
                     .foregroundStyle(Color.text)
                     .multilineTextAlignment(.center)
@@ -38,9 +38,11 @@ struct WidgetSetupView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(Color.main, lineWidth: 1)
-                Text("widget追加のイラスト")
-                    .font(AppFonts.body)
-                    .foregroundStyle(Color.text)
+                Image("WidgetSetup")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.horizontal, 40)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 40)
