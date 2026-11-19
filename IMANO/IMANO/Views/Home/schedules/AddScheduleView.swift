@@ -1,5 +1,5 @@
 //
-//  AddScheduleStep.swift
+//  AddScheduleView.swift
 //  IMANO
 //
 //  Created by 川岸遥奈 on 2026/11/19.
@@ -27,8 +27,6 @@ struct AddScheduleView: View {
     @State private var place = ""
     @State private var memo = ""
     @State private var isExternalCalendarEnabled = false
-
-    @State private var isShowingConfirmation = false
 
     // MARK: - Category
     private var category: ScheduleCategory {
@@ -93,10 +91,14 @@ struct AddScheduleView: View {
                     Button("戻る") {
                         currentStep = .suggestion
                     }
+                    .font(AppFonts.buttonText)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
                     .foregroundStyle(Color.text)
                     .background(.white)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 8)
+                    )
                     .overlay {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.gray, lineWidth: 1)
@@ -110,7 +112,8 @@ struct AddScheduleView: View {
                         currentStep = .detail
 
                     case .detail:
-                        isShowingConfirmation = true
+                        // TODO: 予定の保存処理
+                        dismiss()
                     }
                 } label: {
                     Text(
@@ -137,18 +140,5 @@ struct AddScheduleView: View {
             .padding(.bottom, 20)
         }
         .background(Color(.background))
-        .confirmationDialog(
-            "この予定を追加しますか？",
-            isPresented: $isShowingConfirmation
-        ) {
-            Button("追加する") {
-                // TODO: 予定の保存処理
-                dismiss()
-            }
-
-            Button("キャンセル", role: .cancel) {}
-        } message: {
-            Text(title)
-        }
     }
 }
