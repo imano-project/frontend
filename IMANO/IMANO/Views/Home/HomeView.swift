@@ -14,7 +14,7 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
-    @State private var isShowingFreeTime = true
+    @State private var isShowingFreeTime = false
     @State private var isShowingAddSchedule = false
     @State private var schedules = ScheduleSampleData.create()
 
@@ -46,7 +46,10 @@ struct HomeView: View {
                 // MARK: - Scroll Content
                 VStack(spacing: 16) {
                     // MARK: - Schedule
-                    ScheduleListView(schedules: $schedules)
+                    ScheduleListView(
+                        schedules: $schedules,
+                        isShowingFreeTime: isShowingFreeTime
+                    )
                 }
             }
             // MARK: - Add Schedule Button

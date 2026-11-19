@@ -74,8 +74,13 @@ struct ScheduleListView: View {
 
     // MARK: - Properties
     @Binding var schedules: [ScheduleDisplayItem]
+    let isShowingFreeTime: Bool
+    private let freeTimeService = FreeTimeService()
     private var sortedSchedules: [ScheduleDisplayItem] {
         schedules.sorted { $0.startDate < $1.startDate }
+    }
+    private var freeTimes: [FreeTimeItem] {
+        freeTimeService.calculate(from: sortedSchedules)
     }
 
     // MARK: - Body
@@ -91,7 +96,12 @@ struct ScheduleListView: View {
                 }?.id
                 ScrollView {
                     VStack(spacing: 10) {
-                        ForEach(sortedSchedules) { schedule in
+                        ForEach(
+                            Array(sortedSchedules.enumerated()),
+                            id: \.element.id
+                        ) { index, schedule in
+
+                            // MARK: - Schedule Card
                             let size = cardSize(
                                 for: schedule,
                                 at: currentDate,
@@ -102,6 +112,21 @@ struct ScheduleListView: View {
                                 size: size
                             )
                             .id(schedule.id)
+
+                            // MARK: - Free Time Card
+                            if isShowingFreeTime,
+                               index < sortedSchedules.count - 1 {
+                                let nextSchedule = sortedSchedules[index + 1]
+                                if let freeTime = freeTimes.first(where: {
+                                    $0.startDate == schedule.endDate &&
+                                        $0.endDate == nextSchedule.startDate &&
+                                        $0.endDate > currentDate
+                                }) {
+                                    FreeTimeCardView(
+                                        freeTime: freeTime
+                                    )
+                                }
+                            }
                         }
                     }
                     .padding(.horizontal, 20)
