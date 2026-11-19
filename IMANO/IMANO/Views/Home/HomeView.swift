@@ -16,7 +16,8 @@ struct HomeView: View {
     @StateObject private var homeViewModel = HomeViewModel()
     @State private var isShowingFreeTime = true
     @State private var isShowingAddSchedule = false
-    
+    @State private var schedules = ScheduleSampleData.create()
+
     // MARK: - Body
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -43,11 +44,9 @@ struct HomeView: View {
                 .padding(.vertical, 8)
                 
                 // MARK: - Scroll Content
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // MARK: - Schedule
-                        ScheduleListView()
-                    }
+                VStack(spacing: 16) {
+                    // MARK: - Schedule
+                    ScheduleListView(schedules: $schedules)
                 }
             }
             // MARK: - Add Schedule Button
