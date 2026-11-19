@@ -12,14 +12,6 @@ enum TabItem: Hashable {
     case home
     case rule
     case settings
-
-    var title: String {
-        switch self {
-        case .home: return "ホーム"
-        case .rule: return "ルール"
-        case .settings: return "設定"
-        }
-    }
     var iconName: String {
         switch self {
         case .home: return "icon_home"
