@@ -8,6 +8,9 @@
 import SwiftUI
 
 enum AppFonts {
+    // MARK: - logo
+    static let logoText = Font.custom("RoundedMplus1c-Bold", size: 64)
+
 
     // MARK: - Button
     static let buttonText = Font.custom("RoundedMplus1c-ExtraBold", size: 20)
