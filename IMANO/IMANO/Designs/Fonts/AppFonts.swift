@@ -26,4 +26,11 @@ enum AppFonts {
 
     // MARK: - Annotation
     static let annotation = Font.custom("RoundedMplus1c-Regular", size: 7)
+
+    // MARK: - schedule
+    static let time = Font.custom("RoundedMplus1c-Regular", size: 10)
+    static let title = Font.custom("RoundedMplus1c-Regular", size: 16)
+    static let largeTime = Font.custom("RoundedMplus1c-Medium", size: 14)
+    static let largeDescription = Font.custom("RoundedMplus1c-Medium", size: 10)
+
 }

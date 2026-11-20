@@ -7,27 +7,36 @@
 
 import SwiftUI
 
-struct MainTabView : View {
+struct MainTabView: View {
+
     // MARK: - Properties
     @State private var selectedTab: TabItem = .home
-    // MARK: - body
+
+    // MARK: - Body
     var body: some View {
         TabView(selection: $selectedTab) {
+
+            // MARK: - Home
             HomeView()
                 .tabItem {
-                    Label(TabItem.home.title, image:TabItem.home.iconName)
+                    Image(TabItem.home.iconName)
                 }
                 .tag(TabItem.home)
+
+            // MARK: - Rule
             RuleView()
                 .tabItem {
-                    Label(TabItem.rule.title, image:TabItem.rule.iconName)
+                    Image(TabItem.rule.iconName)
                 }
                 .tag(TabItem.rule)
+
+            // MARK: - Settings
             SettingView()
                 .tabItem {
-                    Label(TabItem.settings.title, image:TabItem.settings.iconName)
+                    Image(TabItem.settings.iconName)
                 }
                 .tag(TabItem.settings)
         }
+        .tint(Color.main)
     }
 }

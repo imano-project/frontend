@@ -14,6 +14,8 @@ struct HomeHeaderView: View {
     let monthText: String
     let dayText: String
     let weekdayText: String
+    let currentActivityText: String
+    let weatherInfo: WeatherInfo?
 
     // MARK: - Body
     var body: some View {
@@ -23,12 +25,16 @@ struct HomeHeaderView: View {
             ZStack {
 
                 // MARK: - Current Activity
-                Text("今何してるか")
+                Text(currentActivityText)
                     .font(AppFonts.body)
                     .foregroundStyle(.text)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .bottom
+                    )
 
-                // MARK: - Date & Navigation Button
+                // MARK: - Date & Weather & Navigation Button
                 HStack(spacing: 0) {
 
                     // MARK: - Date
@@ -36,27 +42,47 @@ struct HomeHeaderView: View {
                         Text(yearText + "年")
                             .font(AppFonts.body)
                             .foregroundStyle(.text)
+
                         Text(monthText + "月")
                             .font(AppFonts.body)
                             .foregroundStyle(.text)
+
                         Text(dayText)
                             .font(AppFonts.buttonText)
                             .foregroundStyle(.text)
+
                         Text("日（\(weekdayText)）")
                             .font(AppFonts.body)
                             .foregroundStyle(.text)
                     }
                     .offset(y: -5)
-                    Spacer()
+
+                    Spacer(minLength: 4)
+
+                    // MARK: - Weather
+                    if let weatherInfo {
+                        HStack(spacing: 4) {
+                            Image(systemName: weatherInfo.symbolName)
+                                .symbolRenderingMode(.multicolor)
+                                .font(.system(size: 25))
+
+                            Text("\(Int(weatherInfo.temperature.rounded()))°")
+                                .font(AppFonts.body)
+                                .foregroundStyle(.text)
+                        }
+                        .padding(.trailing, 12)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel(
+                            "\(weatherInfo.condition)、\(Int(weatherInfo.temperature.rounded()))度"
+                        )
+                    }
 
                     // MARK: - Navigation Button
                     Image(systemName: "chevron.right")
                         .font(.system(size: 24, weight: .medium))
                         .foregroundStyle(.white)
                         .frame(width: 36, height: 76)
-                        .background(
-                            Color(.mainButton)
-                        )
+                        .background(Color(.mainButton))
                         .clipShape(
                             RoundedRectangle(cornerRadius: 6)
                         )
