@@ -5,15 +5,19 @@
 //  Created by 川岸遥奈 on 2026/10/28.
 //
 
+
 import SwiftUI
 import CoreLocation
 
+// MARK: - Home View
 struct HomeView: View {
-    
+
     // MARK: - Properties
     @Environment(\.scenePhase) private var scenePhase
+
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
+
     @State private var isShowingFreeTime = false
     @State private var isShowingAddSchedule = false
     @State private var schedules = ScheduleSampleData.create()
@@ -23,8 +27,9 @@ struct HomeView: View {
         ZStack(alignment: .bottomTrailing) {
             Color(.background)
                 .ignoresSafeArea()
+
             VStack(spacing: 0) {
-                
+
                 // MARK: - Fixed Header
                 HomeHeaderView(
                     yearText: dateViewModel.yearText,
@@ -32,19 +37,21 @@ struct HomeView: View {
                     dayText: dateViewModel.dayText,
                     weekdayText: dateViewModel.weekdayText
                 )
-                
+
                 // MARK: - Free Time
                 HStack {
                     Spacer()
+
                     HomeFreeTimeView(
                         isShowingFreeTime: $isShowingFreeTime
                     )
                 }
                 .padding(.horizontal, 31)
                 .padding(.vertical, 8)
-                
+
                 // MARK: - Scroll Content
                 VStack(spacing: 16) {
+
                     // MARK: - Schedule
                     ScheduleListView(
                         schedules: $schedules,
@@ -52,6 +59,7 @@ struct HomeView: View {
                     )
                 }
             }
+
             // MARK: - Add Schedule Button
             Button {
                 isShowingAddSchedule = true
@@ -61,19 +69,26 @@ struct HomeView: View {
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(Color(.mainButton))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 8)
+                    )
                     .overlay {
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(.mainButton), lineWidth: 1)
+                            .stroke(
+                                Color(.mainButton),
+                                lineWidth: 1
+                            )
                     }
             }
             .padding(.trailing, 24)
             .padding(.bottom, 24)
         }
         .sheet(isPresented: $isShowingAddSchedule) {
-            AddScheduleView()
-                .presentationDetents([.fraction(0.75), .large])
-                .presentationDragIndicator(.visible)
+            AddScheduleView { newSchedule in
+                addSchedule(newSchedule)
+            }
+            .presentationDetents([.fraction(0.75), .large])
+            .presentationDragIndicator(.visible)
         }
         .onAppear {
             homeViewModel.startMonitoring()
@@ -82,5 +97,11 @@ struct HomeView: View {
             guard newPhase == .active else { return }
             dateViewModel.refresh()
         }
+    }
+
+    // MARK: - Add Schedule
+    private func addSchedule(_ schedule: ScheduleDisplayItem) {
+        schedules.append(schedule)
+        schedules.sort { $0.startDate < $1.startDate }
     }
 }

@@ -18,9 +18,8 @@ struct AddScheduleView: View {
 
     // MARK: - Properties
     @Environment(\.dismiss) private var dismiss
-
+    var onAdd: (ScheduleDisplayItem) -> Void = { _ in }
     @State private var currentStep: AddScheduleStep = .suggestion
-
     @State private var title = ""
     @State private var startDate = Date()
     @State private var endDate = Date().addingTimeInterval(3600)
@@ -33,20 +32,25 @@ struct AddScheduleView: View {
         ScheduleCategory.detect(from: title)
     }
 
+    // MARK: - Validation
+    private var isValidSchedule: Bool {
+        !title.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).isEmpty && endDate > startDate
+    }
+
     // MARK: - Body
     var body: some View {
         VStack(spacing: 0) {
 
             // MARK: - Header
             HStack(spacing: 14) {
-
                 Image(systemName: category.iconName)
                     .font(.system(size: 26))
                     .foregroundStyle(category.color)
                     .frame(width: 60, height: 60)
                     .background(Color.gray.opacity(0.1))
                     .clipShape(Circle())
-
                 TextField("タイトル", text: $title)
                     .font(AppFonts.title)
                     .padding(.horizontal, 16)
@@ -62,7 +66,6 @@ struct AddScheduleView: View {
             // MARK: - Content
             Group {
                 switch currentStep {
-
                 case .suggestion:
                     AddScheduleSuggestionView(
                         title: $title,
@@ -112,8 +115,7 @@ struct AddScheduleView: View {
                         currentStep = .detail
 
                     case .detail:
-                        // TODO: 予定の保存処理
-                        dismiss()
+                        addSchedule()
                     }
                 } label: {
                     Text(
@@ -131,14 +133,42 @@ struct AddScheduleView: View {
                     )
                 }
                 .disabled(
-                    title.trimmingCharacters(
+                    currentStep == .suggestion
+                    ? title.trimmingCharacters(
                         in: .whitespacesAndNewlines
                     ).isEmpty
+                    : !isValidSchedule
+                )
+                .opacity(
+                    currentStep == .detail && !isValidSchedule
+                    ? 0.5
+                    : 1
                 )
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 20)
         }
         .background(Color(.background))
+    }
+
+    // MARK: - Add Schedule
+    private func addSchedule() {
+        guard isValidSchedule else { return }
+
+        let newSchedule = ScheduleDisplayItem(
+            id: UUID().uuidString,
+            title: title.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            ),
+            startDate: startDate,
+            endDate: endDate,
+            place: place,
+            type: "登録予定",
+            memo: memo,
+            size: .small
+        )
+
+        onAdd(newSchedule)
+        dismiss()
     }
 }
