@@ -5,7 +5,6 @@
 //  Created by 川岸遥奈 on 2026/10/28.
 //
 
-
 import SwiftUI
 
 // MARK: - Rule View
@@ -14,7 +13,7 @@ struct RuleView: View {
     // MARK: - Properties
     @State private var searchText = ""
     @State private var isShowingAddRule = false
-    @State private var rules = Self.loadSampleRules()
+    @State private var rules = RuleSampleData.create()
 
     // MARK: - Search Matching
     private func matchesSearch(_ text: String, query: String) -> Bool {
@@ -22,23 +21,29 @@ struct RuleView: View {
             .hiraganaToKatakana,
             reverse: false
         ) ?? text
+
         let normalizedQuery = query.applyingTransform(
             .hiraganaToKatakana,
             reverse: false
         ) ?? query
+
         return normalizedText.localizedCaseInsensitiveContains(normalizedQuery)
     }
+
     // MARK: - Filtered Rules
     private var filteredRules: [UserRule] {
         let query = searchText.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
+
         guard !query.isEmpty else {
             return rules
         }
+
         return rules.filter { rule in
             matchesSearch(rule.name, query: query)
             || matchesSearch(rule.type, query: query)
+            || matchesSearch(rule.memo ?? "", query: query)
             || (rule.condition.keywords ?? []).contains {
                 matchesSearch($0, query: query)
             }
@@ -50,6 +55,7 @@ struct RuleView: View {
         ZStack(alignment: .bottomTrailing) {
             Color.white
                 .ignoresSafeArea()
+
             VStack(spacing: 0) {
 
                 // MARK: - Fixed Header
@@ -79,7 +85,6 @@ struct RuleView: View {
                             )
                             .frame(maxWidth: .infinity)
                             .padding(.top, 32)
-
                         } else {
                             LazyVStack(spacing: 8) {
                                 ForEach(filteredRules) { rule in
@@ -115,48 +120,5 @@ struct RuleView: View {
                 .presentationDetents([.fraction(0.75), .large])
                 .presentationDragIndicator(.visible)
         }
-    }
-
-    // MARK: - Sample Data
-    private static func loadSampleRules() -> [UserRule] {
-        let json = """
-        {
-          "rules": [
-            {
-              "id": "ru_01",
-              "name": "バイトは10分前に到着",
-              "type": "arrival_buffer",
-              "enabled": true,
-              "condition": {
-                "placeId": "pl_work",
-                "keywords": ["バイト", "アルバイト", "仕事"]
-              },
-              "action": {
-                "minutes": 10
-              }
-            },
-            {
-              "id": "ru_02",
-              "name": "バイトの出発通知",
-              "type": "departure_notification",
-              "enabled": true,
-              "condition": {
-                "placeId": "pl_work"
-              },
-              "action": {
-                "minutesBefore": 15
-              }
-            }
-          ]
-        }
-        """
-        guard let data = json.data(using: .utf8),
-              let response = try? JSONDecoder().decode(
-                RuleResponse.self,
-                from: data
-              ) else {
-            return []
-        }
-        return response.rules
     }
 }
