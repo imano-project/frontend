@@ -32,7 +32,9 @@ struct RootView: View {
                 // MARK: - Login
             case .login:
                 LoginView {
-                    currentScreen = .permission
+//                    currentScreen = .permission
+                    currentScreen = .main
+
                 }
 
                 // MARK: - Permission

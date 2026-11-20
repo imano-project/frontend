@@ -14,6 +14,7 @@ struct RuleResponse: Decodable {
 struct UserRule: Decodable, Identifiable {
     let id: String
     let name: String
+    let memo: String?
     let type: String
     let enabled: Bool
     let condition: RuleCondition
