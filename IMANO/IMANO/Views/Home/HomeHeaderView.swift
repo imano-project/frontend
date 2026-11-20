@@ -15,6 +15,7 @@ struct HomeHeaderView: View {
     let dayText: String
     let weekdayText: String
     let currentActivityText: String
+    let weatherInfo: WeatherInfo?
 
     // MARK: - Body
     var body: some View {
@@ -33,7 +34,7 @@ struct HomeHeaderView: View {
                         alignment: .bottom
                     )
 
-                // MARK: - Date & Navigation Button
+                // MARK: - Date & Weather & Navigation Button
                 HStack(spacing: 0) {
 
                     // MARK: - Date
@@ -56,7 +57,25 @@ struct HomeHeaderView: View {
                     }
                     .offset(y: -5)
 
-                    Spacer()
+                    Spacer(minLength: 4)
+
+                    // MARK: - Weather
+                    if let weatherInfo {
+                        HStack(spacing: 4) {
+                            Image(systemName: weatherInfo.symbolName)
+                                .symbolRenderingMode(.multicolor)
+                                .font(.system(size: 25))
+
+                            Text("\(Int(weatherInfo.temperature.rounded()))°")
+                                .font(AppFonts.body)
+                                .foregroundStyle(.text)
+                        }
+                        .padding(.trailing, 12)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel(
+                            "\(weatherInfo.condition)、\(Int(weatherInfo.temperature.rounded()))度"
+                        )
+                    }
 
                     // MARK: - Navigation Button
                     Image(systemName: "chevron.right")

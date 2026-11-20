@@ -4,7 +4,6 @@
 //
 //  Created by 川岸遥奈 on 2026/10/28.
 //
-
 import SwiftUI
 import CoreLocation
 
@@ -15,6 +14,7 @@ struct HomeView: View {
 
     @StateObject private var dateViewModel = DateViewModel()
     @StateObject private var homeViewModel = HomeViewModel()
+    @StateObject private var weatherViewModel = WeatherViewModel()
 
     @State private var isShowingFreeTime = false
     @State private var isShowingAddSchedule = false
@@ -38,7 +38,8 @@ struct HomeView: View {
                         weekdayText: dateViewModel.weekdayText,
                         currentActivityText: currentActivityText(
                             at: context.date
-                        )
+                        ),
+                        weatherInfo: weatherViewModel.weatherInfo
                     )
                 }
 
@@ -71,12 +72,7 @@ struct HomeView: View {
                 isShowingAddSchedule = true
             } label: {
                 Image(systemName: "plus")
-                    .font(
-                        .system(
-                            size: 28,
-                            weight: .medium
-                        )
-                    )
+                    .font(.system(size: 28, weight: .medium))
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(Color(.mainButton))
@@ -110,6 +106,13 @@ struct HomeView: View {
         }
         .onAppear {
             homeViewModel.startMonitoring()
+            fetchWeatherIfNeeded()
+        }
+        .onChange(of: homeViewModel.locationInfo?.latitude) { _ in
+            fetchWeatherIfNeeded()
+        }
+        .onChange(of: homeViewModel.locationInfo?.longitude) { _ in
+            fetchWeatherIfNeeded()
         }
         .onChange(of: scenePhase) { newPhase in
             guard newPhase == .active else {
@@ -117,6 +120,7 @@ struct HomeView: View {
             }
 
             dateViewModel.refresh()
+            fetchWeatherIfNeeded()
         }
     }
 
@@ -129,6 +133,20 @@ struct HomeView: View {
         }
 
         return schedule.title + "中"
+    }
+
+    // MARK: - Fetch Weather
+    private func fetchWeatherIfNeeded() {
+        guard let location = homeViewModel.locationInfo else {
+            return
+        }
+
+        let coordinate = CLLocation(
+            latitude: location.latitude,
+            longitude: location.longitude
+        )
+
+        weatherViewModel.fetchWeather(for: coordinate)
     }
 
     // MARK: - Add Schedule
