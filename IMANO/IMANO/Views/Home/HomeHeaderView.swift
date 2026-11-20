@@ -14,6 +14,7 @@ struct HomeHeaderView: View {
     let monthText: String
     let dayText: String
     let weekdayText: String
+    let currentActivityText: String
 
     // MARK: - Body
     var body: some View {
@@ -23,10 +24,14 @@ struct HomeHeaderView: View {
             ZStack {
 
                 // MARK: - Current Activity
-                Text("今何してるか")
+                Text(currentActivityText)
                     .font(AppFonts.body)
                     .foregroundStyle(.text)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .bottom
+                    )
 
                 // MARK: - Date & Navigation Button
                 HStack(spacing: 0) {
@@ -36,17 +41,21 @@ struct HomeHeaderView: View {
                         Text(yearText + "年")
                             .font(AppFonts.body)
                             .foregroundStyle(.text)
+
                         Text(monthText + "月")
                             .font(AppFonts.body)
                             .foregroundStyle(.text)
+
                         Text(dayText)
                             .font(AppFonts.buttonText)
                             .foregroundStyle(.text)
+
                         Text("日（\(weekdayText)）")
                             .font(AppFonts.body)
                             .foregroundStyle(.text)
                     }
                     .offset(y: -5)
+
                     Spacer()
 
                     // MARK: - Navigation Button
@@ -54,9 +63,7 @@ struct HomeHeaderView: View {
                         .font(.system(size: 24, weight: .medium))
                         .foregroundStyle(.white)
                         .frame(width: 36, height: 76)
-                        .background(
-                            Color(.mainButton)
-                        )
+                        .background(Color(.mainButton))
                         .clipShape(
                             RoundedRectangle(cornerRadius: 6)
                         )

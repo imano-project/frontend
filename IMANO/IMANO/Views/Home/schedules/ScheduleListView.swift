@@ -12,6 +12,7 @@ enum ScheduleCardSize {
     case large
     case medium
     case small
+
     var height: CGFloat {
         switch self {
         case .large:
@@ -20,6 +21,18 @@ enum ScheduleCardSize {
             53
         case .small:
             45
+        }
+    }
+
+    // MARK: - Width Ratio
+    var widthRatio: CGFloat {
+        switch self {
+        case .large:
+            1.0
+        case .medium:
+            0.94
+        case .small:
+            0.88
         }
     }
 }
@@ -51,6 +64,7 @@ struct ScheduleDisplayItem: Identifiable {
                 .locale(Locale(identifier: "ja_JP"))
         )
     }
+
     var endTimeText: String {
         endDate.formatted(
             .dateTime
@@ -59,6 +73,7 @@ struct ScheduleDisplayItem: Identifiable {
                 .locale(Locale(identifier: "ja_JP"))
         )
     }
+
     var timeText: String {
         "\(startTimeText)〜\(endTimeText)"
     }
@@ -74,11 +89,16 @@ struct ScheduleListView: View {
 
     // MARK: - Properties
     @Binding var schedules: [ScheduleDisplayItem]
+
     let isShowingFreeTime: Bool
+    var onFreeTimeTap: (FreeTimeItem) -> Void = { _ in }
+
     private let freeTimeService = FreeTimeService()
+
     private var sortedSchedules: [ScheduleDisplayItem] {
         schedules.sorted { $0.startDate < $1.startDate }
     }
+
     private var freeTimes: [FreeTimeItem] {
         freeTimeService.calculate(from: sortedSchedules)
     }
@@ -88,12 +108,15 @@ struct ScheduleListView: View {
         ScrollViewReader { proxy in
             TimelineView(.periodic(from: .now, by: 60)) { context in
                 let currentDate = context.date
+
                 let currentScheduleID = sortedSchedules.first {
                     $0.isCurrent(at: currentDate)
                 }?.id
+
                 let nextScheduleID = sortedSchedules.first {
                     $0.startDate > currentDate
                 }?.id
+
                 ScrollView {
                     VStack(spacing: 10) {
                         ForEach(
@@ -107,24 +130,30 @@ struct ScheduleListView: View {
                                 at: currentDate,
                                 nextScheduleID: nextScheduleID
                             )
+
                             ScheduleCardView(
                                 schedule: schedule,
-                                size: size
+                                size: size,
+                                currentDate: currentDate
                             )
                             .id(schedule.id)
 
                             // MARK: - Free Time Card
                             if isShowingFreeTime,
                                index < sortedSchedules.count - 1 {
+
                                 let nextSchedule = sortedSchedules[index + 1]
+
                                 if let freeTime = freeTimes.first(where: {
                                     $0.startDate == schedule.endDate &&
-                                        $0.endDate == nextSchedule.startDate &&
-                                        $0.endDate > currentDate
+                                    $0.endDate == nextSchedule.startDate &&
+                                    $0.endDate > currentDate
                                 }) {
                                     FreeTimeCardView(
                                         freeTime: freeTime
-                                    )
+                                    ) {
+                                        onFreeTimeTap(freeTime)
+                                    }
                                 }
                             }
                         }
@@ -155,9 +184,11 @@ struct ScheduleListView: View {
         if schedule.isCurrent(at: date) {
             return .large
         }
+
         if schedule.id == nextScheduleID {
             return .medium
         }
+
         return .small
     }
 }
@@ -168,17 +199,77 @@ struct ScheduleCardView: View {
     // MARK: - Properties
     let schedule: ScheduleDisplayItem
     let size: ScheduleCardSize
+    let currentDate: Date
+
     private var isHighlighted: Bool {
         size == .large || size == .medium
     }
+
     private var textColor: Color {
         isHighlighted ? .white : Color.text
     }
+
     private var iconSize: CGFloat {
-        isHighlighted ? 60 : 35
+        switch size {
+        case .large:
+            60
+        case .medium:
+            45
+        case .small:
+            35
+        }
     }
+
     private var backgroundColor: Color {
         isHighlighted ? schedule.category.color : .white
+    }
+
+    // MARK: - Current Time
+    private var currentTimeProgress: CGFloat? {
+        guard schedule.isCurrent(at: currentDate) else {
+            return nil
+        }
+
+        let duration = schedule.endDate.timeIntervalSince(
+            schedule.startDate
+        )
+
+        guard duration > 0 else {
+            return nil
+        }
+
+        let elapsed = currentDate.timeIntervalSince(
+            schedule.startDate
+        )
+
+        return CGFloat(
+            min(max(elapsed / duration, 0), 1)
+        )
+    }
+
+    private var currentTimeText: String {
+        currentDate.formatted(
+            .dateTime
+                .hour()
+                .minute()
+                .locale(Locale(identifier: "ja_JP"))
+        )
+    }
+
+    private var currentTimeTextColor: Color {
+        Color(
+            red: 0.68,
+            green: 0.40,
+            blue: 0.47
+        )
+    }
+
+    private var currentTimeBackgroundColor: Color {
+        Color(
+            red: 1.0,
+            green: 0.94,
+            blue: 0.96
+        )
     }
 
     // MARK: - Body
@@ -192,78 +283,126 @@ struct ScheduleCardView: View {
                 .frame(width: 65)
 
             // MARK: - Schedule Card
-            VStack(alignment: .leading, spacing: 4) {
-                if isHighlighted {
+            scheduleContent
+                .frame(maxWidth: .infinity)
+                .containerRelativeFrame(.horizontal) { width, _ in
+                    let availableWidth = width - 40 - 65 - 12
+                    return availableWidth * size.widthRatio
+                }
+        }
+        .frame(maxWidth: .infinity)
+        .overlay {
 
-                    // MARK: - Large & Medium
-                    HStack(
-                        alignment: .firstTextBaseline,
-                        spacing: 10
-                    ) {
-                        Text(schedule.timeText)
-                            .font(AppFonts.largeTime)
-                            .fixedSize(
-                                horizontal: true,
-                                vertical: false
+            // MARK: - Current Time Label
+            if let progress = currentTimeProgress {
+                GeometryReader { geometry in
+                    let labelY = min(
+                        max(
+                            geometry.size.height * progress,
+                            12
+                        ),
+                        geometry.size.height - 12
+                    )
+
+                    Text("いま \(currentTimeText)")
+                        .font(
+                            .system(
+                                size: 10,
+                                weight: .medium
                             )
-                        Text(schedule.title)
-                            .font(AppFonts.title)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
-
-                    // MARK: - Place
-                    if !schedule.place.isEmpty {
-                        Label(
-                            schedule.place,
-                            systemImage: "mappin"
                         )
-                        .font(AppFonts.largeDescription)
-                        .lineLimit(1)
-                    }
-
-                    // MARK: - Memo
-                    if !schedule.memo.isEmpty {
-                        Label(
-                            schedule.memo,
-                            systemImage: "note.text"
+                        .foregroundStyle(currentTimeTextColor)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(currentTimeBackgroundColor)
+                        .clipShape(Capsule())
+                        .fixedSize()
+                        .position(
+                            x: geometry.size.width - 42,
+                            y: labelY
                         )
-                        .font(AppFonts.largeDescription)
-                        .lineLimit(1)
-                    }
-                } else {
+                }
+                .allowsHitTesting(false)
+            }
+        }
+    }
 
-                    // MARK: - Small
+    // MARK: - Schedule Content
+    private var scheduleContent: some View {
+        VStack(alignment: .leading, spacing: 4) {
+
+            if isHighlighted {
+
+                // MARK: - Large & Medium
+                HStack(
+                    alignment: .firstTextBaseline,
+                    spacing: 10
+                ) {
                     Text(schedule.timeText)
-                        .font(AppFonts.time)
+                        .font(AppFonts.largeTime)
+                        .fixedSize(
+                            horizontal: true,
+                            vertical: false
+                        )
+
                     Text(schedule.title)
                         .font(AppFonts.title)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
-            }
-            .foregroundStyle(textColor)
-            .frame(
-                maxWidth: .infinity,
-                alignment: .leading
-            )
-            .padding(.horizontal, 12)
-            .padding(.vertical, isHighlighted ? 8 : 4)
-            .frame(
-                minHeight: size.height,
-                alignment: .center
-            )
-            .background(backgroundColor)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 6)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(
-                        schedule.category.color,
-                        lineWidth: 2
+
+                // MARK: - Place
+                if !schedule.place.isEmpty {
+                    Label(
+                        schedule.place,
+                        systemImage: "mappin"
                     )
+                    .font(AppFonts.largeDescription)
+                    .lineLimit(1)
+                }
+
+                // MARK: - Memo
+                if !schedule.memo.isEmpty {
+                    Label(
+                        schedule.memo,
+                        systemImage: "note.text"
+                    )
+                    .font(AppFonts.largeDescription)
+                    .lineLimit(1)
+                }
+
+            } else {
+
+                // MARK: - Small
+                Text(schedule.timeText)
+                    .font(AppFonts.time)
+
+                Text(schedule.title)
+                    .font(AppFonts.title)
+                    .lineLimit(1)
             }
         }
-        .frame(maxWidth: .infinity)
+        .foregroundStyle(textColor)
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
+        .padding(.horizontal, 12)
+        .padding(.vertical, isHighlighted ? 8 : 4)
+        .frame(
+            minHeight: size.height,
+            alignment: .center
+        )
+        .background(backgroundColor)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 6)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(
+                    schedule.category.color,
+                    lineWidth: 2
+                )
+        }
     }
 }

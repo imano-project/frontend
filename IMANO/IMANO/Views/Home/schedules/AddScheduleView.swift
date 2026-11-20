@@ -5,6 +5,7 @@
 //  Created by 川岸遥奈 on 2026/11/19.
 //
 
+
 import SwiftUI
 
 // MARK: - Add Schedule Step
@@ -18,8 +19,13 @@ struct AddScheduleView: View {
 
     // MARK: - Properties
     @Environment(\.dismiss) private var dismiss
+
     var onAdd: (ScheduleDisplayItem) -> Void = { _ in }
+    var initialStartDate: Date? = nil
+    var initialEndDate: Date? = nil
+
     @State private var currentStep: AddScheduleStep = .suggestion
+
     @State private var title = ""
     @State private var startDate = Date()
     @State private var endDate = Date().addingTimeInterval(3600)
@@ -45,12 +51,14 @@ struct AddScheduleView: View {
 
             // MARK: - Header
             HStack(spacing: 14) {
+
                 Image(systemName: category.iconName)
                     .font(.system(size: 26))
                     .foregroundStyle(category.color)
                     .frame(width: 60, height: 60)
                     .background(Color.gray.opacity(0.1))
                     .clipShape(Circle())
+
                 TextField("タイトル", text: $title)
                     .font(AppFonts.title)
                     .padding(.horizontal, 16)
@@ -66,6 +74,7 @@ struct AddScheduleView: View {
             // MARK: - Content
             Group {
                 switch currentStep {
+
                 case .suggestion:
                     AddScheduleSuggestionView(
                         title: $title,
@@ -149,6 +158,15 @@ struct AddScheduleView: View {
             .padding(.bottom, 20)
         }
         .background(Color(.background))
+        .onAppear {
+            if let initialStartDate {
+                startDate = initialStartDate
+            }
+
+            if let initialEndDate {
+                endDate = initialEndDate
+            }
+        }
     }
 
     // MARK: - Add Schedule
