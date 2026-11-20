@@ -35,7 +35,7 @@ struct RuleHeaderView: View {
             }
             
             // MARK: - Description
-            Text("ユーザールールの説明文、この画面で何ができるのか")
+            Text("予定や場所に合わせて、必要な情報を表示するルールを\n設定できます。")
                 .font(AppFonts.sentence)
                 .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .center)

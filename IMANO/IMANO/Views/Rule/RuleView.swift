@@ -15,6 +15,7 @@ struct RuleView: View {
     // MARK: - Properties
     @State private var searchText = ""
     @State private var isShowingAddRule = false
+    @State private var editingRule: UserRule?
     @State private var rules = RuleSampleData.create()
 
     // MARK: - Search Aliases
@@ -52,7 +53,9 @@ struct RuleView: View {
 
         var reading = ""
 
-        var tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer)
+        var tokenType = CFStringTokenizerAdvanceToNextToken(
+            tokenizer
+        )
 
         while tokenType.rawValue != 0 {
             if let latinReading = CFStringTokenizerCopyCurrentTokenAttribute(
@@ -68,12 +71,12 @@ struct RuleView: View {
 
                 reading += hiragana
             } else {
-                let range = CFStringTokenizerGetCurrentTokenRange(tokenizer)
+                let range = CFStringTokenizerGetCurrentTokenRange(
+                    tokenizer
+                )
 
                 if range.location != kCFNotFound {
-                    let nsText = text as NSString
-
-                    reading += nsText.substring(
+                    reading += (text as NSString).substring(
                         with: NSRange(
                             location: range.location,
                             length: range.length
@@ -82,14 +85,19 @@ struct RuleView: View {
                 }
             }
 
-            tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer)
+            tokenType = CFStringTokenizerAdvanceToNextToken(
+                tokenizer
+            )
         }
 
         return normalizeSearchText(reading)
     }
 
     // MARK: - Search Matching
-    private func matchesSearch(_ text: String, query: String) -> Bool {
+    private func matchesSearch(
+        _ text: String,
+        query: String
+    ) -> Bool {
         let normalizedText = normalizeSearchText(text)
         let normalizedQuery = normalizeSearchText(query)
 
@@ -113,6 +121,9 @@ struct RuleView: View {
     // MARK: - Place Name
     private func placeName(for placeId: String?) -> String {
         switch placeId {
+        case "pl_home":
+            return "自宅"
+
         case "pl_school":
             return "学校"
 
@@ -162,15 +173,22 @@ struct RuleView: View {
 
                 // MARK: - Rule Content
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(
+                        alignment: .leading,
+                        spacing: 12
+                    ) {
 
                         // MARK: - Search
-                        RuleSearchView(searchText: $searchText)
+                        RuleSearchView(
+                            searchText: $searchText
+                        )
 
                         // MARK: - Rule Count
-                        Text("ユーザールール数：\(filteredRules.count)")
-                            .font(AppFonts.sentence)
-                            .foregroundStyle(.black)
+                        Text(
+                            "ユーザールール数：\(filteredRules.count)"
+                        )
+                        .font(AppFonts.sentence)
+                        .foregroundStyle(.black)
 
                         // MARK: - Rule List
                         if filteredRules.isEmpty {
@@ -192,7 +210,12 @@ struct RuleView: View {
                         } else {
                             LazyVStack(spacing: 8) {
                                 ForEach(filteredRules) { rule in
-                                    RuleCardView(rule: rule)
+                                    Button {
+                                        editingRule = rule
+                                    } label: {
+                                        RuleCardView(rule: rule)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
                             }
                         }
@@ -208,7 +231,12 @@ struct RuleView: View {
                 isShowingAddRule = true
             } label: {
                 Image(systemName: "plus")
-                    .font(.system(size: 28, weight: .medium))
+                    .font(
+                        .system(
+                            size: 28,
+                            weight: .medium
+                        )
+                    )
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(Color(.mainButton))
@@ -221,13 +249,29 @@ struct RuleView: View {
             .padding(.trailing, 24)
             .padding(.bottom, 24)
         }
+
+        // MARK: - Add Rule Sheet
         .sheet(isPresented: $isShowingAddRule) {
-            Text("ルール追加画面")
-                .presentationDetents([
-                    .fraction(0.75),
-                    .large
-                ])
-                .presentationDragIndicator(.visible)
+            AddRuleView { newRule in
+                rules.insert(newRule, at: 0)
+            }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+        }
+
+        // MARK: - Edit Rule Sheet
+        .sheet(item: $editingRule) { rule in
+            AddRuleView(editingRule: rule) { updatedRule in
+                guard let index = rules.firstIndex(
+                    where: { $0.id == updatedRule.id }
+                ) else {
+                    return
+                }
+
+                rules[index] = updatedRule
+            }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
     }
 }
